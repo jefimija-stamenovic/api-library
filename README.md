@@ -15,7 +15,7 @@ python -m venv naziv-virtualnog-okruzenja
 pip install -r requirements.txt
 ```
 
-> [!NOTE]  
+> [!TIP]  
 > Ukoliko ažurirate biblioteke ili dodajete nove, možete ažurirati `requirements.txt` fajl sledećom komandom:  
 >  
 > ```bash  
