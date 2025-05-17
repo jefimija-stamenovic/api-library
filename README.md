@@ -6,7 +6,7 @@ U ovom projektu je prikazana izrada web servera za upravljanje bibliotekom uz ko
 
 ### 🚀 FastAPI 
 
-> 💡 **Tip**  
+> [!TIP]
 > FastAPI je idealan framework ukoliko je potrebna mikroservisna arhitektura jer se lako integriše sa drugim alatima kao što su Docker i Celery
 
 ## Arhitektura aplikacije 
