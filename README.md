@@ -14,3 +14,10 @@ Za uspešno pokretanje projekta, potrebno je prethodno podesiti okruženje
     .\naziv-virtualnog-okruzenja\Scripts\Activate.ps1
     pip install -r requirements.txt
 ```
+
+> [!NOTE]  
+> Ukoliko ažurirate biblioteke ili dodajete nove, možete ažurirati `requirements.txt` fajl sledećom komandom:  
+>  
+> ```bash  
+> pip freeze > requirements.txt  
+> ```
