@@ -10,9 +10,9 @@ Ovaj projekat predstavlja FastAPI aplikaciju za upravljanje bibliotekom. Funkcio
 Za uspešno pokretanje projekta, potrebno je prethodno podesiti okruženje 
 ### Instalacija zavisnosti
 ```{python}
-    python -m venv naziv-virtualnog-okruzenja
-    .\naziv-virtualnog-okruzenja\Scripts\Activate.ps1
-    pip install -r requirements.txt
+python -m venv naziv-virtualnog-okruzenja
+.\naziv-virtualnog-okruzenja\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
 > [!NOTE]  
