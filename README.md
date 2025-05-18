@@ -2,12 +2,20 @@
 
 U ovom projektu je prikazana izrada web servera za upravljanje bibliotekom uz korišćenje Python framework-a **FastAPI**. Aplikacija je razvijena u skladu sa troslojnom arhitekturom UI-BL-DAL čime se postiže lakše održavanje i veća preglednost koda, kao i jasno razgraničavanje odgovornosti između slojeva. Za rad sa podacima je primenjen ORM model **SQLAlchemy** koji omogućava objektno-orijentisanu komunikaciju sa bazom podataka bez direktnog pisanja SQL upita, sami podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane FastAPI-a. 
 
-## 🛠️ Korišćene tehnologije u razvoju aplikacije
+## 🛠️ Ostale korišćene tehnologije u razvoju aplikacije
 
-### 🚀 FastAPI 
+### 🧩 Pydantic
+**Pydantic** je Python biblioteka koja se koristi za definisanje modela podataka i njihovu automatsku proveru. Ova biblioteka omogućava da se na jednom mestu jasno opiše kako neki podatak treba da izgleda - kog je tipa, da li je obavezan i koja mu je podrazumevana vrednost. Kada aplikacija primi HTTP zahtev od strane klijenta, ona koristi Pydantic modele da bi proverila da li su pristigli podaci ispravni. Ukoliko nisu, klijent dobija HTTP odgovor sa statusom 422 i detaljnim objašnjenjem gde je došlo do greške. 
 
-> [!TIP]
-> FastAPI je idealan framework ukoliko je potrebna mikroservisna arhitektura jer se lako integriše sa drugim alatima kao što su Docker i Celery
+> [!IMPORTANT]
+> Jedna od glavnih prednosti Pydantic-a je ta što se isti model može upotrebiti i za validiranje ulaznih podataka i za formatiranje odgovora koji se šalje klijentu. Time se obezbeđuje doslednost u strukturi podataka, ne dolazi do dupliranja logike, a ujedno se pojednostavljuje održavanje i testiranje celokupne aplikacije. 
+
+### ✅ SQLAlchemy
+**SQLAlchemy** je Python biblioteka koja predstavlja standardni ORM (Object-Relational Mapping) alat za rad sa bazom podataka. Omogućava povezivanje Python objekata sa tabelama u relacionoj bazi podataka što znači da se umesto direktnog pisanja SQL upita, operacije nad podacima obavljaju kroz Python objekte. Ovim se postiže lakši razvoj i održavanje aplikacije jer se logika rada centralizuje i postaje nezavisna od konkretne baze. 
+
+
+> [!NOTE]
+> SQLAlchemy je fleksibilan pa tako omogućava da se složeni upiti pišu manuelno kada je to potrebno, ali i da se većina operacija obavlja kroz objektni model. Ovim se pojednostavljuje razvoj i unapređuje čitljivost koda. 
 
 ## Arhitektura aplikacije 
 Sama aplikacija je organizovana u tri sloja: 
