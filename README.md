@@ -13,9 +13,14 @@ U ovom projektu je prikazana izrada web servera za upravljanje bibliotekom uz ko
 ### ✅ SQLAlchemy
 **SQLAlchemy** je Python biblioteka koja predstavlja standardni ORM (Object-Relational Mapping) alat za rad sa bazom podataka. Omogućava povezivanje Python objekata sa tabelama u relacionoj bazi podataka što znači da se umesto direktnog pisanja SQL upita, operacije nad podacima obavljaju kroz Python objekte. Ovim se postiže lakši razvoj i održavanje aplikacije jer se logika rada centralizuje i postaje nezavisna od konkretne baze. 
 
-
 > [!NOTE]
 > SQLAlchemy je fleksibilan pa tako omogućava da se složeni upiti pišu manuelno kada je to potrebno, ali i da se većina operacija obavlja kroz objektni model. Ovim se pojednostavljuje razvoj i unapređuje čitljivost koda. 
+
+### Uvicorn 
+**Uvicorn** je ASGI (Asynchronous Server Gateway Interface) server koji služi za pokretanje FastAPI aplikacije. Njegov zadatak je da prima HTTP zahteve od klijenata i da ih prosledi aplikaciji. Pošto radi po ASGI standardu, to znači da omogućava asinhroni rad aplikacije, odnosno, da aplikacija može istovremeno obrađivati više zahteva. 
+
+> [!IMPORTANT]
+> Uvicorn je zvanično preporučen server za FastAPI i često se koristi u razvojnom i produkcionom okruženju zbog svoje brzine i jednostavnosti. 
 
 ## Arhitektura aplikacije 
 Sama aplikacija je organizovana u tri sloja: 
