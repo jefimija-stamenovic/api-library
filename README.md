@@ -10,7 +10,7 @@
     - [🧩 Pydantic](#-pydantic)
     - [🔗 SQLAlchemy](#-sqlalchemy)
     - [📦 Alembic](#-alembic)
-  - [Arhitektura aplikacije](#arhitektura-aplikacije)
+  - [✳️ Arhitektura aplikacije](#️-arhitektura-aplikacije)
   - [Podešavanje okruženja](#podešavanje-okruženja)
     - [Instalacija zavisnosti](#instalacija-zavisnosti)
     - [Upravljanje okruženjem i konfiguracijom aplikacije](#upravljanje-okruženjem-i-konfiguracijom-aplikacije)
@@ -100,17 +100,22 @@ Izmene se opisuju u vidu migracija tj. Python datoteka čiji sadržaj čine inst
 > [!IMPORTANT]
 > Alembic značajno pojednostavljuje održavanje baze tokom razvoja, a razlog za to je što se umesto ručnog ažuriranja šeme primenjuju sve izmene preko verzionisanih migracija, uz mogućnost vraćanja na prethodno stanje ukoliko je potrebno. 
 
-## Arhitektura aplikacije 
+## ✳️ Arhitektura aplikacije 
 Sama aplikacija je organizovana u tri sloja: 
   1) **UI (user interface) sloj** - ovo je sloj koji predstavlja korisnički interfejs same aplikacije prema klijentima koji komuniciraju sa njom preko HTTP/HTTPS protokola. Glavni zadatak ovog sloja jeste implementiranje REST API ruta, prijem HTTP zahteva i slanje adekvatnih HTTP odgovora. Sem toga, UI obrađuje parametre (path, query, body i header) HTTP zahteva, validira ih i prosleđuje podatke sloju ispod sebe tj. sloju poslovne logije (BL). UI sloj, sam po sebi, ne treba da sadrži poslovnu logiku, već samo treba da bude posrednik koji je zadužen za komunikaciju između klijenta i unutrašnjih komponenti aplikacije.
 
-  2) BL (business layer) sloj - ovo je sloj poslovne logike i predstavlja središnji nivo aplikacione arhitekture jer se nalazi između sloja korisničkog interfejsa i sloja za pristup podacima. Glavni zadatak ovog sloja je da obradi pristigle podatke i implementira pravila kojima se definiše ponašanje sistema - tzv. "poslovna logika".  Na primer, u ovom sloju će se obaviti provera ispunjenosti kriterijuma za iznajmljivanje knjiga, da li je knjiha dostupna itd. Sem toga, BL sloj transformiše podatke po potrebi i priprema odgovore koje potom delegira UI sloju. O
+  2) **BL (business layer) sloj** - ovo je sloj poslovne logike i predstavlja središnji nivo aplikacione arhitekture jer se nalazi između sloja korisničkog interfejsa i sloja za pristup podacima. Glavni zadatak ovog sloja je da obradi pristigle podatke i implementira pravila kojima se definiše ponašanje sistema - tzv. "poslovna logika".  Na primer, u ovom sloju će se obaviti provera ispunjenosti kriterijuma za iznajmljivanje knjiga, da li je knjiha dostupna itd. Sem toga, BL sloj transformiše podatke po potrebi i priprema odgovore koje potom delegira UI sloju. O
   
-  3) DAL (data access layer) sloj - ovo je sloj za pristup podacima, pa samim tim je i zadužen za direktnu komunikaciju sa bazom podataka. U okviru njega se definišu CRUD (create, read, update, delete) operacije tj. operacije za kreiranje, čitanje, ažuriranje i brisanje. Ovaj sloj predstavlja apstrakciju nad samom bazom podataka što znači da sloj poslovne logike ne mora, a ni ne treba da zna tehničke detalje baze ili samih SQL upita. U ovoj aplikaciji, DAL koristi SQLAlchemy ORM koji omogućava efikasan, a pre svega tipski bezbedan rad sa MySQL bazom podataka. Sve operacije nad entitetima se nalaze u ovom sloju čime se izbegava replikacija koda i pojednostavljuje njegovo održavanje. 
+  3) **DAL (data access layer) sloj** - ovo je sloj za pristup podacima, pa samim tim je i zadužen za direktnu komunikaciju sa bazom podataka. U okviru njega se definišu CRUD (create, read, update, delete) operacije tj. operacije za kreiranje, čitanje, ažuriranje i brisanje. Ovaj sloj predstavlja apstrakciju nad samom bazom podataka što znači da sloj poslovne logike ne mora, a ni ne treba da zna tehničke detalje baze ili samih SQL upita. U ovoj aplikaciji, DAL koristi SQLAlchemy ORM koji omogućava efikasan, a pre svega tipski bezbedan rad sa MySQL bazom podataka. Sve operacije nad entitetima se nalaze u ovom sloju čime se izbegava replikacija koda i pojednostavljuje njegovo održavanje. 
 
-Ovakva arhitektura aplikavicije omogućava jasnu podelu odgovornosti slojeva što značajno olakšava samo održavanje, testiranje, ali i skaliranje aplikacije jer se svaki sloj može nezavisno razvijati i menjati. Sem toga, ovakva struktura omogućava bolju preglednost koda i smanjuje rizik od grešaka. 
+Kratak pregleda funkcija slojeva:  
+| Sloj  | Funkcija                           | Primer u FastAPI-ju                                            |
+|-------|------------------------------------|----------------------------------------------------------------|
+| UI    | Interfejs ka korisniku (API rute)  | rute, request handler-i                                        |
+| BL    | Obrada podataka, poslovna logika   | servisni sloj, Pydantic klase i funkcije koje obrađuju podatke |
+| DAL   | Komunikacija sa bazom podataka     | SQLAlchemy modeli i upiti, CRUD функције                       |
 
-
+Ovakva arhitektura aplikacije omogućava jasnu podelu odgovornosti slojeva što značajno olakšava samo održavanje, testiranje, ali i skaliranje aplikacije jer se svaki sloj može nezavisno razvijati i menjati. Sem toga, ovakva struktura omogućava bolju preglednost koda i smanjuje rizik od nastanka grešaka. 
 
 ## Podešavanje okruženja
 Za uspešno pokretanje projekta, potrebno je prethodno podesiti okruženje što podrazumeva podešavanje virtualnog okruženja, uvoz neophodnih zavisnosti tj. biblioteka i podešavanje radnog okruženja (produkciono/razvojno) 
