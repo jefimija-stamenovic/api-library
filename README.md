@@ -3,7 +3,7 @@
   - [💡Šta je FastAPI?](#šta-je-fastapi)
   - [❓ Koji problemi se rešavaju?](#-koji-problemi-se-rešavaju)
   - [🚀 Zašto baš FastAPI?](#-zašto-baš-fastapi)
-  - [✅ Prednosti i ⚠️ mane](#-prednosti-i-️-mane)
+  - [✅❌ Prednosti i mane](#-prednosti-i-mane)
   - [🔁 Konkurentna rešenja](#-konkurentna-rešenja)
   - [🛠️ Ostale korišćene tehnologije u razvoju aplikacije](#️-ostale-korišćene-tehnologije-u-razvoju-aplikacije)
     - [🦄 Uvicorn](#-uvicorn)
@@ -46,7 +46,7 @@ Razvijen je na osnovu standardnih specifikacija poput OpenAPI-ja i JSON Schema-e
 4. **Fleksibilnost** - zahvaljujući svom dizajnu, **FastAPI** se lako prilagođava i manjim i većim projektima što omogućava da bude korišćen u različitim poslovnim kontekstima
 5. **Aktivna zajednica i održavanje** - **FastAPI** ima aktivnu zajednicu sačinjenu od korisnika i programera, kao i redovna ažuriranja što garantuje stabilnost **FastAPI**-ja i njegovo kontinuirano unapređivanje u vidu uvođenja novih funkcija 
 
-## ✅ Prednosti i ⚠️ mane
+## ✅❌ Prednosti i mane
 
 | Kriterijum        | Prednosti                                                              | Mane                                                                 |
 |-------------------|------------------------------------------------------------------------|----------------------------------------------------------------------|
