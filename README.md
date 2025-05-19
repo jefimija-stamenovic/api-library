@@ -1,5 +1,5 @@
-- [Biblioteka API](#biblioteka-api)
-  - [Opis projekta](#opis-projekta)
+- [📕 Biblioteka API](#-biblioteka-api)
+  - [📝 Opis projekta](#-opis-projekta)
   - [💡Šta je FastAPI?](#šta-je-fastapi)
   - [❓ Koji problemi se rešavaju?](#-koji-problemi-se-rešavaju)
   - [🚀 Zašto baš FastAPI?](#-zašto-baš-fastapi)
@@ -17,9 +17,9 @@
   - [Literatura](#literatura)
 
 
-# Biblioteka API
+# 📕 Biblioteka API
 
-## Opis projekta
+## 📝 Opis projekta
 
 > [!NOTE]
 > Projekat je kreiran u okviru seminarskog rada na predmetu **Napredno softversko inženjerstvo** na master akademskim studijama Elektronskog fakulteta Univerziteta u Nišu, smer Računarstvo i informatika, modul Softversko inženjerstvo. 
