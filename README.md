@@ -33,26 +33,28 @@ U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom.
 Razvijen je na osnovu standardnih specifikacija poput OpenAPI-ja i JSON Schema-e. Takođe je baziran i na ASGI standardu, što znači da je moguć asinhroni način rada, odnosno, može da obrađuje više zahteva istovremeno što je značajno za performanse. 
 
 ## ❓ Koji problemi se rešavaju? 
-FastAPI je razvijen kao odgovor na konkretne izazove u razvoju savremenih web servisa, gde je poseban akcenat stavljen na brzinu, pouzdanost i jednostavan razvoj. Ključni problemi koje rešava su: 
+**FastAPI** je razvijen kao odgovor na konkretne izazove u razvoju savremenih web servisa, gde je poseban akcenat stavljen na brzinu, pouzdanost i jednostavan razvoj. Ključni problemi koje rešava su: 
  - **Manuelna validacija podataka** - uz podršku biblioteke *Pydantic*, omogućena je automatska validacija ulaznih i izlaznih podataka. Time se eliminiše potreba za ručnim pisanjem logike gde se proverava ispravnost podataka, pa samim tim dolazi i do smanjenja koda i smanjenja mogućnosti za nastanak grešaka. 
- - **Nedostatak dokumentacije** - FastAPI automatski generiše potpunu i interaktivnu dokumentaciju u grafičkom okruženju koristeći Swagger i ReDoc na osnovu definisanih ruta i tipova. 
- - **Paralelna obrada zahteva** - FastAPI pruža podršku za asinhroni rad (*async/await*) što omogućava efikasno korišćenje resursa čak i u aplikacijama koje imaju potrebu za obradu velikog broja istovremenih zahteva
- - **Nedostatak kontrole nad strukturom podataka** - za razliku od nekih drugih tradicionalnih *framework*-ova, FastAPI nudi mogućnost eksplicitnog definisanja strukture podataka kroz tipove čime se omogućava automatska validacija i rano otkrivnje grešaka koje bi inače bile uočene tek u produkciji. 
+ - **Nedostatak dokumentacije** - **FastAPI** automatski generiše potpunu i interaktivnu dokumentaciju u grafičkom okruženju koristeći Swagger i ReDoc na osnovu definisanih ruta i tipova. 
+ - **Paralelna obrada zahteva** - **FastAPI** pruža podršku za asinhroni rad (*async/await*) što omogućava efikasno korišćenje resursa čak i u aplikacijama koje imaju potrebu za obradu velikog broja istovremenih zahteva
+ - **Nedostatak kontrole nad strukturom podataka** - za razliku od nekih drugih tradicionalnih *framework*-ova, **FastAPI** nudi mogućnost eksplicitnog definisanja strukture podataka kroz tipove čime se omogućava automatska validacija i rano otkrivnje grešaka koje bi inače bile uočene tek u produkciji. 
 
 ## 🚀 Zašto baš FastAPI? 
-1. **Izuzetne performanse** - FastAPI omogućava razvoj aplikacija sa asinhronim modelom izvršavanja što obezbeđuje efikasnu obradu velikog broja istovremenih zahteva bez ugrožavanja performansi 
+1. **Izuzetne performanse** - **FastAPI** omogućava razvoj aplikacija sa asinhronim modelom izvršavanja što obezbeđuje efikasnu obradu velikog broja istovremenih zahteva bez ugrožavanja performansi 
 2. **Smanjenje obima koda** - zahvaljujući ugrađenim mehanizmima za automatsku validaciju podataka i generisanje interaktivne dokumentacije, smanjuje se potreba za pisanjem koda što ujedno znači i ubrzavanje razvoja 
-3. **Precizna i transparentna struktura podataka** - pošto FastAPI koristi jasno definisane tipove i Pydantic modele, to znači da je struktura podataka precizna i transparentna, pa je samim tim održavanje koda lakše
-4. **Fleksibilnost** - zahvaljujući svom dizajnu, FastAPI se lako prilagođava i manjim i većim projektima što omogućava da bude korišćen u različitim poslovnim kontekstima
-5. **Aktivna zajednica i održavanje** - FastAPI ima aktivnu zajednicu sačinjenu od korisnika i programera, kao i redovna ažuriranja što garantuje stabilnost FastAPI-ja i njegovo kontinuirano unapređivanje u vidu uvođenja novih funkcija 
+3. **Precizna i transparentna struktura podataka** - pošto **FastAPI** koristi jasno definisane tipove i Pydantic modele, to znači da je struktura podataka precizna i transparentna, pa je samim tim održavanje koda lakše
+4. **Fleksibilnost** - zahvaljujući svom dizajnu, **FastAPI** se lako prilagođava i manjim i većim projektima što omogućava da bude korišćen u različitim poslovnim kontekstima
+5. **Aktivna zajednica i održavanje** - **FastAPI** ima aktivnu zajednicu sačinjenu od korisnika i programera, kao i redovna ažuriranja što garantuje stabilnost **FastAPI**-ja i njegovo kontinuirano unapređivanje u vidu uvođenja novih funkcija 
 
 ## ✅ Prednosti i ⚠️ mane
-| Kriterijum         | Prednosti                                                            | Mane                                                                              |
-|--------------------|----------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| 🎯 Performanse     | Veoma brz zbog ASGI protokola i asinhronog načina rada               | Asinhrono programiranje može biti izazovan za početnike                           |
-| 📄 Dokumentacija   | Generiše se automatski i uvek ažurna sa kodom                        | Za specifične i kompleksne domene može da bude neoptimalna                        |
-| 💡 Razvoj          | Visok stepen produktivnosti zbog automatske validacije i tipizacije  | Manje dostupnih tutorijala i primera u poređenju sa starijim *framework*-ovima    |
-| 📈 Skalabilnost    | Fleksibilan za male i velike projekte, lako se prilagođava potrebama | Za veoma velike i kompleksne sisteme može zahtevati dodatne optimizacije          |
+
+| Kriterijum        | Prednosti                                                              | Mane                                                                 |
+|-------------------|------------------------------------------------------------------------|----------------------------------------------------------------------|
+| 🎯 Performanse     | Veoma brz zbog ASGI protokola i asinhronog načina rada                | Asinhrono programiranje može biti izazov za početnike                |
+| 📄 Dokumentacija   | Generiše se automatski i uvek ažurna sa kodom                         | Za specifične i kompleksne domene može da bude neoptimalna           |
+| 💡 Razvoj          | Visok stepen produktivnosti zbog automatske validacije i tipizacije   | Manje dostupnih tutorijala i primera u poređenju sa starijim alatima |
+| 📈 Skalabilnost    | Fleksibilan za male i velike projekte, lako se prilagođava potrebama  | Za veoma velike sisteme može zahtevati dodatne optimizacije          |
+
 
 ## 🔁 Konkurentna rešenja 
 
@@ -65,7 +67,7 @@ FastAPI je razvijen kao odgovor na konkretne izazove u razvoju savremenih web se
 | Sanic         | ✅                       | ❌                    | ❌                    | ❌                |
 | Falcon        | ✅                       | ❌                    | ❌                    | ⚠️ ograničeno     |
 
-- FastAPI se izdvaja kao jedini *framework* koji ispunjava sve potrebne ključne kriterijume za razvoj savremenih i pouzdanih API-ja. Nudi mogućnost asinhronog načina rada, validacija podataka i kreiranje dokumentacije je automatizovano i tipizacija podataka je precizna što sve doprinosi brzini razvoja i smanjenju grešaka
+- **FastAPI** se izdvaja kao jedini *framework* koji ispunjava sve potrebne ključne kriterijume za razvoj savremenih i pouzdanih API-ja. Nudi mogućnost asinhronog načina rada, validacija podataka i kreiranje dokumentacije je automatizovano i tipizacija podataka je precizna što sve doprinosi brzini razvoja i smanjenju grešaka
 - Iako je Flask izuzetno fleksibilan i jednostavan za korišćenje, on nema ugrađenu podršku za asinhroni način rada i automatsku obradu validacije i kreiranje dokumentacije, pa bi za te funkcionalnosti morale da se koriste dodatne biblioteke
 - Django REST ima pouzdanu i sveobuhvatnu podršku za validaciju i dokumentaciju, ali je asinhroni način rada ograničen i zahteva dodatne korake koji mogu dovesti do usporavanja razvoja, naročito kod aplikacija sa velikim brojem istovremenih zahteva. 
 - Tornado, Sanic i Falcon se fokusiranju na obezbeđivanje brzine i asinhrono procesiranje zahteva, ali nemaju ugrađene mehanizme za automatsku validaciju podataka i dokumentaciju, niti pružaju isti nivo tipske bezbednosti 
@@ -73,10 +75,10 @@ FastAPI je razvijen kao odgovor na konkretne izazove u razvoju savremenih web se
 ## 🛠️ Ostale korišćene tehnologije u razvoju aplikacije
 
 ### 🦄 Uvicorn 
-**Uvicorn** je ASGI (Asynchronous Server Gateway Interface) server koji se koristi za pokretanje FastAPI aplikacije. Osnovni zadatak Uvicorn-a je prijem HTTP zahteva koje šalje klijent i da ih prosledi samoj aplikaciji. Pošto radi po ASGI standardu, to značo da je moguć asinhroni rad tj. aplikacija može istovremeno da obrađuje više paralelnih zahteva, a da ne dođe do blokiranja. Ovo značajno doprinosi poboljšanju performansi i skalabilnosti aplikacije, naročito ako se radi o aplikacijama sa značajnim brojem korisnika. 
+**Uvicorn** je ASGI (Asynchronous Server Gateway Interface) server koji se koristi za pokretanje **FastAPI** aplikacije. Osnovni zadatak Uvicorn-a je prijem HTTP zahteva koje šalje klijent i da ih prosledi samoj aplikaciji. Pošto radi po ASGI standardu, to značo da je moguć asinhroni rad tj. aplikacija može istovremeno da obrađuje više paralelnih zahteva, a da ne dođe do blokiranja. Ovo značajno doprinosi poboljšanju performansi i skalabilnosti aplikacije, naročito ako se radi o aplikacijama sa značajnim brojem korisnika. 
 
 > [!IMPORTANT]
-> Uvicorn je zvanično preporučen server za FastAPI aplikacije zbog svoje brzine i podrške za asinhroni rad. S obzirom da minimalno troši resurse, a brzo odgovara na klijentske zahteve, idealan je za upotrebu i u razvojnom i u produkcionom okruženju, posebno ako se radi o sistemima koji zahtevaju visok stepen paralelne obrade podataka. 
+> Uvicorn je zvanično preporučen server za **FastAPI** aplikacije zbog svoje brzine i podrške za asinhroni rad. S obzirom da minimalno troši resurse, a brzo odgovara na klijentske zahteve, idealan je za upotrebu i u razvojnom i u produkcionom okruženju, posebno ako se radi o sistemima koji zahtevaju visok stepen paralelne obrade podataka. 
 
 ### 🧩 Pydantic
 **Pydantic** je Python biblioteka koja se koristi za definisanje modela podataka i njihovu automatsku proveru. Ova biblioteka omogućava da se na jednom mestu jasno opiše kako neki podatak treba da izgleda - kog je tipa, da li je obavezan i koja mu je podrazumevana vrednost. Kada aplikacija primi HTTP zahtev od strane klijenta, ona koristi Pydantic modele da bi proverila da li su pristigli podaci ispravni. Ukoliko nisu, klijent dobija HTTP odgovor sa statusom 422 i detaljnim objašnjenjem gde je došlo do greške. 
