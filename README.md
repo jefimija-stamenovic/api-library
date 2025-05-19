@@ -22,7 +22,7 @@
 ## Opis projekta
 
 > [!NOTE]
-> Projekat je kreiran u okviru seminarskog rada na predmetu **Napredno softversko inženjerstvo** na master akademskim studijama Elektronskog fakulteta univerziteta u Nišu, smer Računarstvo i informatika, modul Softversko inženjerstvo. 
+> Projekat je kreiran u okviru seminarskog rada na predmetu **Napredno softversko inženjerstvo** na master akademskim studijama Elektronskog fakulteta Univerziteta u Nišu, smer Računarstvo i informatika, modul Softversko inženjerstvo. 
 
 Repozitorijum sadrži implementaciju REST API servisa razvijenog uz pomoć **FastAPI** *framework*-a. Cilj projekta je da se prikaže praktična primena savremenih *backend* tehnologija baziranih na asinhronom radu, tipskoj bezbednosti i automatskoj validaciji podataka. 
 
