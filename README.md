@@ -1,7 +1,9 @@
 - [Biblioteka API](#biblioteka-api)
   - [Opis projekta](#opis-projekta)
-  - [❓ Problem koji se rešava](#-problem-koji-se-rešava)
-  - [✅ Zašto baš FastAPI?](#-zašto-baš-fastapi)
+  - [💡Šta je FastAPI?](#šta-je-fastapi)
+  - [❓ Koji problemi se rešavaju?](#-koji-problemi-se-rešavaju)
+  - [🚀 Zašto baš FastAPI?](#-zašto-baš-fastapi)
+  - [✅ Prednosti i ⚠️ mane](#-prednosti-i-️-mane)
   - [🔁 Konkurentna rešenja](#-konkurentna-rešenja)
   - [🛠️ Ostale korišćene tehnologije u razvoju aplikacije](#️-ostale-korišćene-tehnologije-u-razvoju-aplikacije)
     - [🦄 Uvicorn](#-uvicorn)
@@ -18,31 +20,55 @@
 # Biblioteka API
 
 ## Opis projekta
-Ovaj repozitorijum predstavlja implementaciju web servera zasnovan na FastAPI okviru
-Projekat prikazuje primenu moderne, asinhrone arhitekture u razvoju REST API servisa sa ciljem da se demonstriraju ključne karakteristike FastAPI-ja kao brzog i tipski bezbednog rešenja za backend razvoj. 
 
-U ovom projektu je prikazana izrada web servera za upravljanje bibliotekom uz korišćenje Python framework-a **FastAPI**. Aplikacija je razvijena u skladu sa troslojnom arhitekturom UI-BL-DAL čime se postiže lakše održavanje i veća preglednost koda, kao i jasno razgraničavanje odgovornosti između slojeva. Za rad sa podacima je primenjen ORM model **SQLAlchemy** koji omogućava objektno-orijentisanu komunikaciju sa bazom podataka bez direktnog pisanja SQL upita, sami podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane FastAPI-a. 
+> [!NOTE]
+> Projekat je kreiran u okviru seminarskog rada na predmetu **Napredno softversko inženjerstvo** na master akademskim studijama Elektronskog fakulteta univerziteta u Nišu, smer Računarstvo i informatika, modul Softversko inženjerstvo. 
 
-## ❓ Problem koji se rešava
-Tradicionalni alati za razvoj API-ja u Python-u, poput Flask-a i Django-a, često zahtevaju dodatnu konfiguraciju, ručnu validaciju ulaznih podatka i ne pružaju mogućnost lakog kreiranja dokumentacije. Pored toga, dodatna ograničenja su što imaju slabu podršku za asinhroni kod i sporije obrađuju veliki broj zahteva
+Repozitorijum sadrži implementaciju REST API servisa razvijenog uz pomoć **FastAPI** *framework*-a. Cilj projekta je da se prikaže praktična primena savremenih *backend* tehnologija baziranih na asinhronom radu, tipskoj bezbednosti i automatskoj validaciji podataka. 
 
-## ✅ Zašto baš FastAPI? 
-FastAPI je savremen Python web framework zasnovan na standardima kao što su OpenAPI i JSON Schema. Njegove glavne prednosti su: 
-1) Automatska validacija podataka preko Pydantic modela
-2) Izuzetno visoke performanse zahvaljujući podršci za asinhroni rad
-3) Introspekcija i automatsko kreiranje dokumentacije API-ja (Swagger i ReDoc)
-4) Jaka tipska podrška kojom se pojednostavljuje razvoj i otklanjanje grešaka
-5) Brzina razvoja aplikacija i laka integracija sa drugim alatima 
+U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom. Servis je razvijen u skladu sa troslojnom arhitekturom UI-BL-DAL, za rad sa podacima je primenjen ORM model **SQLAlchemy**, podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane **FastAPI**-a. 
+
+## 💡Šta je FastAPI? 
+**FastAPI** je moderan i brz Python web *framework* namenjen brzom i jednostavnom pravljenju REST API servisa. Pruža sve što je potrebno za razvoj savremenih API-ja - od definisanja ruta i obrade podataka, pa do vraćanja odgovora klijentu i rukovanja greškama. 
+Razvijen je na osnovu standardnih specifikacija poput OpenAPI-ja i JSON Schema-e. Takođe je baziran i na ASGI standardu, što znači da je moguć asinhroni način rada, odnosno, može da obrađuje više zahteva istovremeno što je značajno za performanse. 
+
+## ❓ Koji problemi se rešavaju? 
+FastAPI je razvijen kao odgovor na konkretne izazove u razvoju savremenih web servisa, gde je poseban akcenat stavljen na brzinu, pouzdanost i jednostavan razvoj. Ključni problemi koje rešava su: 
+ - **Manuelna validacija podataka** - uz podršku biblioteke *Pydantic*, omogućena je automatska validacija ulaznih i izlaznih podataka. Time se eliminiše potreba za ručnim pisanjem logike gde se proverava ispravnost podataka, pa samim tim dolazi i do smanjenja koda i smanjenja mogućnosti za nastanak grešaka. 
+ - **Nedostatak dokumentacije** - FastAPI automatski generiše potpunu i interaktivnu dokumentaciju u grafičkom okruženju koristeći Swagger i ReDoc na osnovu definisanih ruta i tipova. 
+ - **Paralelna obrada zahteva** - FastAPI pruža podršku za asinhroni rad (*async/await*) što omogućava efikasno korišćenje resursa čak i u aplikacijama koje imaju potrebu za obradu velikog broja istovremenih zahteva
+ - **Nedostatak kontrole nad strukturom podataka** - za razliku od nekih drugih tradicionalnih *framework*-ova, FastAPI nudi mogućnost eksplicitnog definisanja strukture podataka kroz tipove čime se omogućava automatska validacija i rano otkrivnje grešaka koje bi inače bile uočene tek u produkciji. 
+
+## 🚀 Zašto baš FastAPI? 
+1. **Izuzetne performanse** - FastAPI omogućava razvoj aplikacija sa asinhronim modelom izvršavanja što obezbeđuje efikasnu obradu velikog broja istovremenih zahteva bez ugrožavanja performansi 
+2. **Smanjenje obima koda** - zahvaljujući ugrađenim mehanizmima za automatsku validaciju podataka i generisanje interaktivne dokumentacije, smanjuje se potreba za pisanjem koda što ujedno znači i ubrzavanje razvoja 
+3. **Precizna i transparentna struktura podataka** - pošto FastAPI koristi jasno definisane tipove i Pydantic modele, to znači da je struktura podataka precizna i transparentna, pa je samim tim održavanje koda lakše
+4. **Fleksibilnost** - zahvaljujući svom dizajnu, FastAPI se lako prilagođava i manjim i većim projektima što omogućava da bude korišćen u različitim poslovnim kontekstima
+5. **Aktivna zajednica i održavanje** - FastAPI ima aktivnu zajednicu sačinjenu od korisnika i programera, kao i redovna ažuriranja što garantuje stabilnost FastAPI-ja i njegovo kontinuirano unapređivanje u vidu uvođenja novih funkcija 
+
+## ✅ Prednosti i ⚠️ mane
+| Kriterijum         | Prednosti                                                            | Mane                                                                              |
+|--------------------|----------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| 🎯 Performanse     | Veoma brz zbog ASGI protokola i asinhronog načina rada               | Asinhrono programiranje može biti izazovan za početnike                           |
+| 📄 Dokumentacija   | Generiše se automatski i uvek ažurna sa kodom                        | Za specifične i kompleksne domene može da bude neoptimalna                        |
+| 💡 Razvoj          | Visok stepen produktivnosti zbog automatske validacije i tipizacije  | Manje dostupnih tutorijala i primera u poređenju sa starijim *framework*-ovima    |
+| 📈 Skalabilnost    | Fleksibilan za male i velike projekte, lako se prilagođava potrebama | Za veoma velike i kompleksne sisteme može zahtevati dodatne optimizacije          |
 
 ## 🔁 Konkurentna rešenja 
 
-| Tehnologija   | Podrška za asinhroni rad  | Automatska validacija | Ugrađena dokumentcija | Tipska bezbednost |
-|---------------|---------------------------|-----------------------|-----------------------|-------------------|
-| FastAPI       | ✅                       | ✅                    | ✅                    | ✅               |
-| Flask         | ❌ (uz dodatke)          | ❌                    | ❌                    | ❌               |
-| Django REST   | ⚠️ ograničeno            | ✅                    | ✅  
+| Tehnologija   | Podrška za asinhroni rad  | Automatska validacija | Ugrađena dokumentacija | Tipska bezbednost |
+|---------------|---------------------------|-----------------------|------------------------|-------------------|
+| FastAPI       | ✅                       | ✅                    | ✅                    | ✅                |
+| Flask         | ❌ (moguće uz dodatke)   | ❌                    | ❌                    | ❌                |
+| Django REST   | ⚠️ ograničeno            | ✅                    | ✅                    | ✅                |
+| Tornado       | ✅                       | ❌                    | ❌                    | ⚠️ ograničeno     |
+| Sanic         | ✅                       | ❌                    | ❌                    | ❌                |
+| Falcon        | ✅                       | ❌                    | ❌                    | ⚠️ ograničeno     |
 
-FastAPI se, u odnosu na svoje konkurente, bira zbog balansa između performansi, jednostavnosti i modernih mogućnost
+- FastAPI se izdvaja kao jedini *framework* koji ispunjava sve potrebne ključne kriterijume za razvoj savremenih i pouzdanih API-ja. Nudi mogućnost asinhronog načina rada, validacija podataka i kreiranje dokumentacije je automatizovano i tipizacija podataka je precizna što sve doprinosi brzini razvoja i smanjenju grešaka
+- Iako je Flask izuzetno fleksibilan i jednostavan za korišćenje, on nema ugrađenu podršku za asinhroni način rada i automatsku obradu validacije i kreiranje dokumentacije, pa bi za te funkcionalnosti morale da se koriste dodatne biblioteke
+- Django REST ima pouzdanu i sveobuhvatnu podršku za validaciju i dokumentaciju, ali je asinhroni način rada ograničen i zahteva dodatne korake koji mogu dovesti do usporavanja razvoja, naročito kod aplikacija sa velikim brojem istovremenih zahteva. 
+- Tornado, Sanic i Falcon se fokusiranju na obezbeđivanje brzine i asinhrono procesiranje zahteva, ali nemaju ugrađene mehanizme za automatsku validaciju podataka i dokumentaciju, niti pružaju isti nivo tipske bezbednosti 
 
 ## 🛠️ Ostale korišćene tehnologije u razvoju aplikacije
 
