@@ -41,6 +41,7 @@ FastAPI je savremen Python web framework zasnovan na standardima kao što su Ope
 | FastAPI       | ✅                       | ✅                    | ✅                    | ✅               |
 | Flask         | ❌ (uz dodatke)          | ❌                    | ❌                    | ❌               |
 | Django REST   | ⚠️ ograničeno            | ✅                    | ✅  
+
 FastAPI se, u odnosu na svoje konkurente, bira zbog balansa između performansi, jednostavnosti i modernih mogućnost
 
 ## 🛠️ Ostale korišćene tehnologije u razvoju aplikacije
