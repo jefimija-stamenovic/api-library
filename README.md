@@ -13,11 +13,13 @@
   - [✳️ Arhitektura aplikacije](#️-arhitektura-aplikacije)
   - [⚙️ Pokretanje projekta](#️-pokretanje-projekta)
     - [✅ 1. Kloniranje repoziturijuma](#-1-kloniranje-repoziturijuma)
+      - [Struktura projekta](#struktura-projekta)
     - [📦 2. Podešavanje virtuelnog okruženja](#-2-podešavanje-virtuelnog-okruženja)
     - [📄 3. Instalacija zavisnosti](#-3-instalacija-zavisnosti)
+    - [📄 4. Instalacija zavisnosti](#-4-instalacija-zavisnosti)
     - [Upravljanje okruženjem i konfiguracijom aplikacije](#upravljanje-okruženjem-i-konfiguracijom-aplikacije)
   - [🔒 Zaključak](#-zaključak)
-  - [Literatura](#literatura)
+  - [📚 Literatura](#-literatura)
 
 
 # 📕 Biblioteka API
@@ -78,7 +80,7 @@ Razvijen je na osnovu standardnih specifikacija poput OpenAPI-ja i JSON Schema-e
 ## 🛠️ Ostale korišćene tehnologije u razvoju aplikacije
 
 ### 🦄 Uvicorn 
-**Uvicorn** je ASGI (Asynchronous Server Gateway Interface) server koji se koristi za pokretanje **FastAPI** aplikacije. Osnovni zadatak Uvicorn-a je prijem HTTP zahteva koje šalje klijent i da ih prosledi samoj aplikaciji. Pošto radi po ASGI standardu, to značo da je moguć asinhroni rad tj. aplikacija može istovremeno da obrađuje više paralelnih zahteva, a da ne dođe do blokiranja. Ovo značajno doprinosi poboljšanju performansi i skalabilnosti aplikacije, naročito ako se radi o aplikacijama sa značajnim brojem korisnika. 
+**Uvicorn** je ASGI (Asynchronous Server Gateway Interface) server koji se koristi za pokretanje **FastAPI** aplikacije. Osnovni zadatak Uvicorn-a je prijem HTTP zahteva poslatih od strane klijenta i njihovo prosleđivanje aplikaciji. Pošto radi po ASGI standardu, to znači da je moguć asinhroni rad tj. aplikacija može istovremeno da obrađuje više paralelnih zahteva, a da ne dođe do blokiranja. 
 
 > [!IMPORTANT]
 > Uvicorn je zvanično preporučen server za **FastAPI** aplikacije zbog svoje brzine i podrške za asinhroni rad. S obzirom da minimalno troši resurse, a brzo odgovara na klijentske zahteve, idealan je za upotrebu i u razvojnom i u produkcionom okruženju, posebno ako se radi o sistemima koji zahtevaju visok stepen paralelne obrade podataka. 
@@ -105,13 +107,13 @@ Izmene se opisuju u vidu migracija tj. Python datoteka čiji sadržaj čine inst
 
 ## ✳️ Arhitektura aplikacije 
 Sama aplikacija je organizovana u tri sloja: 
-  1) **UI (user interface) sloj** - ovo je sloj koji predstavlja korisnički interfejs same aplikacije prema klijentima koji komuniciraju sa njom preko HTTP/HTTPS protokola. Glavni zadatak ovog sloja jeste implementiranje REST API ruta, prijem HTTP zahteva i slanje adekvatnih HTTP odgovora. Sem toga, UI obrađuje parametre (path, query, body i header) HTTP zahteva, validira ih i prosleđuje podatke sloju ispod sebe tj. sloju poslovne logije (BL). UI sloj, sam po sebi, ne treba da sadrži poslovnu logiku, već samo treba da bude posrednik koji je zadužen za komunikaciju između klijenta i unutrašnjih komponenti aplikacije.
+  1) **UI (user interface) sloj** - ovaj sloj predstavlja korisnički interfejs same aplikacije prema klijentima koji komuniciraju sa njom preko HTTP/HTTPS protokola. Glavni zadatak ovog sloja jeste implementiranje REST API ruta, prijem HTTP zahteva i slanje adekvatnih HTTP odgovora. Sem toga, UI obrađuje parametre (path, query, body i header) HTTP zahteva, validira ih i prosleđuje podatke sloju ispod sebe tj. sloju poslovne logike (BL). UI sloj, sam po sebi, ne treba da sadrži poslovnu logiku, već samo treba da bude posrednik koji je zadužen za komunikaciju između klijenta i unutrašnjih komponenti aplikacije.
 
-  2) **BL (business layer) sloj** - ovo je sloj poslovne logike i predstavlja središnji nivo aplikacione arhitekture jer se nalazi između sloja korisničkog interfejsa i sloja za pristup podacima. Glavni zadatak ovog sloja je da obradi pristigle podatke i implementira pravila kojima se definiše ponašanje sistema - tzv. "poslovna logika".  Na primer, u ovom sloju će se obaviti provera ispunjenosti kriterijuma za iznajmljivanje knjiga, da li je knjiha dostupna itd. Sem toga, BL sloj transformiše podatke po potrebi i priprema odgovore koje potom delegira UI sloju. O
+  2) **BL (business layer) sloj** - sloj poslovne logike predstavlja središnji nivo aplikacione arhitekture jer se nalazi između sloja korisničkog interfejsa i sloja za pristup podacima. Glavni zadatak ovog sloja je da obradi pristigle podatke i implementira pravila kojima se definiše ponašanje sistema. Na primer, u ovom sloju će se obaviti provera ispunjenosti kriterijuma za iznajmljivanje knjiga, da li je knjiga dostupna itd. Sem toga, BL sloj po potrebi transformiše podatke i priprema odgovore koje potom delegira UI sloju.
   
-  3) **DAL (data access layer) sloj** - ovo je sloj za pristup podacima, pa samim tim je i zadužen za direktnu komunikaciju sa bazom podataka. U okviru njega se definišu CRUD (create, read, update, delete) operacije tj. operacije za kreiranje, čitanje, ažuriranje i brisanje. Ovaj sloj predstavlja apstrakciju nad samom bazom podataka što znači da sloj poslovne logike ne mora, a ni ne treba da zna tehničke detalje baze ili samih SQL upita. U ovoj aplikaciji, DAL koristi SQLAlchemy ORM koji omogućava efikasan, a pre svega tipski bezbedan rad sa MySQL bazom podataka. Sve operacije nad entitetima se nalaze u ovom sloju čime se izbegava replikacija koda i pojednostavljuje njegovo održavanje. 
+  3) **DAL (data access layer) sloj** - ovo je sloj za pristup podacima, pa samim tim je zadužen za direktnu komunikaciju sa bazom podataka. U okviru njega se definišu CRUD (create, read, update, delete) operacije tj. operacije za kreiranje, čitanje, ažuriranje i brisanje. DAL sloj predstavlja apstrakciju nad samom bazom podataka što znači da sloj poslovne logike ne mora, a ni ne treba da zna tehničke detalje baze ili samih SQL upita. U ovoj aplikaciji, DAL koristi SQLAlchemy ORM koji omogućava efikasan, a pre svega tipski bezbedan rad sa MySQL bazom podataka. Sve operacije nad entitetima se nalaze u ovom sloju čime se izbegava replikacija koda i pojednostavljuje njegovo održavanje. 
 
-Kratak pregleda funkcija slojeva:  
+👉 Kratak pregleda funkcija slojeva:  
 | Sloj  | Funkcija                           | Primer u FastAPI-ju                                            |
 |-------|------------------------------------|----------------------------------------------------------------|
 | UI    | Interfejs ka korisniku (API rute)  | rute, request handler-i                                        |
@@ -121,7 +123,7 @@ Kratak pregleda funkcija slojeva:
 Ovakva arhitektura aplikacije omogućava jasnu podelu odgovornosti slojeva što značajno olakšava samo održavanje, testiranje, ali i skaliranje aplikacije jer se svaki sloj može nezavisno razvijati i menjati. Sem toga, ovakva struktura omogućava bolju preglednost koda i smanjuje rizik od nastanka grešaka. 
 
 ## ⚙️ Pokretanje projekta
-Za uspešno pokretanje projekta, potrebno je prethodno podesiti okruženje što podrazumeva podešavanje virtualnog okruženja, uvoz neophodnih zavisnosti tj. biblioteka i podešavanje radnog okruženja (produkciono/razvojno) 
+Za uspešno pokretanje projekta, potrebno je prethodno podesiti okruženje što podrazumeva podešavanje virtualnog okruženja, uvoz neophodnih zavisnosti tj. biblioteka i podešavanje radnog okruženja (produkciono/razvojno). 
 
 ### ✅ 1. Kloniranje repoziturijuma 
 Ovaj projekat se nalazi na *Github*-u, pa je prvi korak ka pokretanju projekta njegovo preuzimanje na lokalni računar putem komande: 
@@ -132,6 +134,26 @@ Ovaj projekat se nalazi na *Github*-u, pa je prvi korak ka pokretanju projekta n
 ```{bash}
   git clone https://github.com/jefimija-stamenovic/api-library.git
   cd api-library
+```
+#### Struktura projekta 
+Nakon kloniranja projekta, klonirani projekat bi trebalo da ima sledeću strukturu: 
+
+```{bash} 
+  api-library/
+  ├── app/
+  │   ├── api/           # UI => rute
+  │   ├── services/      # BL => servisi sa poslovnom logikom
+  │   ├── repositories/  # DAL => rad sa bazom podataka
+  │   ├── models/        # SQLAlchemy modeli
+  │   ├── schemas/       # Pydantic šeme
+  │   ├── core/          # Definicije konfiguracija 
+  │   └── main.py        # Glavni fajl
+  ├── requirements.txt
+  ├── .env
+  │   ├── prod.env       # Podešavanja za produkciono okruženje 
+  │   └── dev.env        # Podešavanja za razvojno okruženje 
+  ├── alembic.ini
+  └── README.md
 ```
 
 ### 📦 2. Podešavanje virtuelnog okruženja 
@@ -152,13 +174,15 @@ python -m venv naziv-virtualnog-okruzenja
 > pip freeze > requirements.txt  
 > ```
 
+### 📄 4. Instalacija zavisnosti 
+
 ### Upravljanje okruženjem i konfiguracijom aplikacije
 Česta praksa prilikom razvoja web aplikacija jeste razdvajanje razvojnog (development) i produkcionog (production) okruženja, a razlog za to je njihova različita namena. Razvojno okruženje se koristi kada je potrebno da se testiraju nove funkcionalnosti ili da se otklone uočene nepravilnosti u radu aplikacije, dok je produkciono okruženje namenjeno korisnicima i mora da bude stabilno i pouzdano. Ovakva praksa omogućava programerima da rade bez rizika od narušavanja rada aplikacije u realnom vremenu. Pored toga, oba okruženja uglavnom imaju različite konfiguracione parametre - pristup bazi, logovanje ili bezbedonosna podešavanja što doprinosi fleksibilnosti i sigurnosti u radu. 
 
 ## 🔒 Zaključak
 FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 
 
-## Literatura
+## 📚 Literatura
 
 https://www.uvicorn.org/#quickstart
 https://alembic.sqlalchemy.org/en/latest/
