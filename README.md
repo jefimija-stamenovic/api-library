@@ -1,5 +1,8 @@
 - [Biblioteka API](#biblioteka-api)
-  - [O projektu](#o-projektu)
+  - [Opis projekta](#opis-projekta)
+  - [❓ Problem koji se rešava](#-problem-koji-se-rešava)
+  - [✅ Zašto baš FastAPI?](#-zašto-baš-fastapi)
+  - [🔁 Konkurentna rešenja](#-konkurentna-rešenja)
   - [🛠️ Ostale korišćene tehnologije u razvoju aplikacije](#️-ostale-korišćene-tehnologije-u-razvoju-aplikacije)
     - [🦄 Uvicorn](#-uvicorn)
     - [🧩 Pydantic](#-pydantic)
@@ -14,8 +17,31 @@
 
 # Biblioteka API
 
-## O projektu
+## Opis projekta
+Ovaj repozitorijum predstavlja implementaciju web servera zasnovan na FastAPI okviru
+Projekat prikazuje primenu moderne, asinhrone arhitekture u razvoju REST API servisa sa ciljem da se demonstriraju ključne karakteristike FastAPI-ja kao brzog i tipski bezbednog rešenja za backend razvoj. 
+
 U ovom projektu je prikazana izrada web servera za upravljanje bibliotekom uz korišćenje Python framework-a **FastAPI**. Aplikacija je razvijena u skladu sa troslojnom arhitekturom UI-BL-DAL čime se postiže lakše održavanje i veća preglednost koda, kao i jasno razgraničavanje odgovornosti između slojeva. Za rad sa podacima je primenjen ORM model **SQLAlchemy** koji omogućava objektno-orijentisanu komunikaciju sa bazom podataka bez direktnog pisanja SQL upita, sami podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane FastAPI-a. 
+
+## ❓ Problem koji se rešava
+Tradicionalni alati za razvoj API-ja u Python-u, poput Flask-a i Django-a, često zahtevaju dodatnu konfiguraciju, ručnu validaciju ulaznih podatka i ne pružaju mogućnost lakog kreiranja dokumentacije. Pored toga, dodatna ograničenja su što imaju slabu podršku za asinhroni kod i sporije obrađuju veliki broj zahteva
+
+## ✅ Zašto baš FastAPI? 
+FastAPI je savremen Python web framework zasnovan na standardima kao što su OpenAPI i JSON Schema. Njegove glavne prednosti su: 
+1) Automatska validacija podataka preko Pydantic modela
+2) Izuzetno visoke performanse zahvaljujući podršci za asinhroni rad
+3) Introspekcija i automatsko kreiranje dokumentacije API-ja (Swagger i ReDoc)
+4) Jaka tipska podrška kojom se pojednostavljuje razvoj i otklanjanje grešaka
+5) Brzina razvoja aplikacija i laka integracija sa drugim alatima 
+
+## 🔁 Konkurentna rešenja 
+
+| Tehnologija   | Podrška za asinhroni rad  | Automatska validacija | Ugrađena dokumentcija | Tipska bezbednost |
+|---------------|---------------------------|-----------------------|-----------------------|-------------------|
+| FastAPI       | ✅                       | ✅                    | ✅                    | ✅               |
+| Flask         | ❌ (uz dodatke)          | ❌                    | ❌                    | ❌               |
+| Django REST   | ⚠️ ograničeno            | ✅                    | ✅  
+FastAPI se, u odnosu na svoje konkurente, bira zbog balansa između performansi, jednostavnosti i modernih mogućnost
 
 ## 🛠️ Ostale korišćene tehnologije u razvoju aplikacije
 
@@ -47,7 +73,7 @@ Izmene se opisuju u vidu migracija tj. Python datoteka čiji sadržaj čine inst
 
 ## Arhitektura aplikacije 
 Sama aplikacija je organizovana u tri sloja: 
-  1) UI (user interface) sloj - ovo je sloj koji predstavlja korisnički interfejs same aplikacije prema klijentima koji komuniciraju sa njom preko HTTP/HTTPS protokola. Glavni zadatak ovog sloja jeste implementiranje REST API ruta, prijem HTTP zahteva i slanje adekvatnih HTTP odgovora. Sem toga, UI obrađuje parametre (path, query, body i header) HTTP zahteva, validira ih i prosleđuje podatke sloju ispod sebe tj. sloju poslovne logije (BL). UI sloj, sam po sebi, ne treba da sadrži poslovnu logiku, već samo treba da bude posrednik koji je zadužen za komunikaciju između klijenta i unutrašnjih komponenti aplikacije.
+  1) **UI (user interface) sloj** - ovo je sloj koji predstavlja korisnički interfejs same aplikacije prema klijentima koji komuniciraju sa njom preko HTTP/HTTPS protokola. Glavni zadatak ovog sloja jeste implementiranje REST API ruta, prijem HTTP zahteva i slanje adekvatnih HTTP odgovora. Sem toga, UI obrađuje parametre (path, query, body i header) HTTP zahteva, validira ih i prosleđuje podatke sloju ispod sebe tj. sloju poslovne logije (BL). UI sloj, sam po sebi, ne treba da sadrži poslovnu logiku, već samo treba da bude posrednik koji je zadužen za komunikaciju između klijenta i unutrašnjih komponenti aplikacije.
 
   2) BL (business layer) sloj - ovo je sloj poslovne logike i predstavlja središnji nivo aplikacione arhitekture jer se nalazi između sloja korisničkog interfejsa i sloja za pristup podacima. Glavni zadatak ovog sloja je da obradi pristigle podatke i implementira pravila kojima se definiše ponašanje sistema - tzv. "poslovna logika".  Na primer, u ovom sloju će se obaviti provera ispunjenosti kriterijuma za iznajmljivanje knjiga, da li je knjiha dostupna itd. Sem toga, BL sloj transformiše podatke po potrebi i priprema odgovore koje potom delegira UI sloju. O
   
