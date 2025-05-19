@@ -1,7 +1,3 @@
-# Biblioteka API
-
-## O projektu
-U ovom projektu je prikazana izrada web servera za upravljanje bibliotekom uz korišćenje Python framework-a **FastAPI**. Aplikacija je razvijena u skladu sa troslojnom arhitekturom UI-BL-DAL čime se postiže lakše održavanje i veća preglednost koda, kao i jasno razgraničavanje odgovornosti između slojeva. Za rad sa podacima je primenjen ORM model **SQLAlchemy** koji omogućava objektno-orijentisanu komunikaciju sa bazom podataka bez direktnog pisanja SQL upita, sami podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane FastAPI-a. 
 - [Biblioteka API](#biblioteka-api)
   - [O projektu](#o-projektu)
   - [🛠️ Ostale korišćene tehnologije u razvoju aplikacije](#️-ostale-korišćene-tehnologije-u-razvoju-aplikacije)
@@ -14,6 +10,12 @@ U ovom projektu je prikazana izrada web servera za upravljanje bibliotekom uz ko
     - [Instalacija zavisnosti](#instalacija-zavisnosti)
     - [Upravljanje okruženjem i konfiguracijom aplikacije](#upravljanje-okruženjem-i-konfiguracijom-aplikacije)
   - [Literatura](#literatura)
+
+
+# Biblioteka API
+
+## O projektu
+U ovom projektu je prikazana izrada web servera za upravljanje bibliotekom uz korišćenje Python framework-a **FastAPI**. Aplikacija je razvijena u skladu sa troslojnom arhitekturom UI-BL-DAL čime se postiže lakše održavanje i veća preglednost koda, kao i jasno razgraničavanje odgovornosti između slojeva. Za rad sa podacima je primenjen ORM model **SQLAlchemy** koji omogućava objektno-orijentisanu komunikaciju sa bazom podataka bez direktnog pisanja SQL upita, sami podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane FastAPI-a. 
 
 ## 🛠️ Ostale korišćene tehnologije u razvoju aplikacije
 
