@@ -11,9 +11,12 @@
     - [🔗 SQLAlchemy](#-sqlalchemy)
     - [📦 Alembic](#-alembic)
   - [✳️ Arhitektura aplikacije](#️-arhitektura-aplikacije)
-  - [Podešavanje okruženja](#podešavanje-okruženja)
-    - [Instalacija zavisnosti](#instalacija-zavisnosti)
+  - [⚙️ Pokretanje projekta](#️-pokretanje-projekta)
+    - [✅ 1. Kloniranje repoziturijuma](#-1-kloniranje-repoziturijuma)
+    - [📦 2. Podešavanje virtuelnog okruženja](#-2-podešavanje-virtuelnog-okruženja)
+    - [📄 3. Instalacija zavisnosti](#-3-instalacija-zavisnosti)
     - [Upravljanje okruženjem i konfiguracijom aplikacije](#upravljanje-okruženjem-i-konfiguracijom-aplikacije)
+  - [🔒 Zaključak](#-zaključak)
   - [Literatura](#literatura)
 
 
@@ -117,16 +120,31 @@ Kratak pregleda funkcija slojeva:
 
 Ovakva arhitektura aplikacije omogućava jasnu podelu odgovornosti slojeva što značajno olakšava samo održavanje, testiranje, ali i skaliranje aplikacije jer se svaki sloj može nezavisno razvijati i menjati. Sem toga, ovakva struktura omogućava bolju preglednost koda i smanjuje rizik od nastanka grešaka. 
 
-## Podešavanje okruženja
+## ⚙️ Pokretanje projekta
 Za uspešno pokretanje projekta, potrebno je prethodno podesiti okruženje što podrazumeva podešavanje virtualnog okruženja, uvoz neophodnih zavisnosti tj. biblioteka i podešavanje radnog okruženja (produkciono/razvojno) 
 
-### Instalacija zavisnosti
-```{python}
-python -m venv naziv-virtualnog-okruzenja
-.\naziv-virtualnog-okruzenja\Scripts\Activate.ps1
-pip install -r requirements.txt
+### ✅ 1. Kloniranje repoziturijuma 
+Ovaj projekat se nalazi na *Github*-u, pa je prvi korak ka pokretanju projekta njegovo preuzimanje na lokalni računar putem komande: 
+
+> [!WARNING]
+> Pre nego što pokušate da preuzmete projekat koristeći komandu ispod, proverite da li na računaru imate instaliran Git CLI. Bez njega, komanda **git clone** neće niti prepoznata i preuzimanje repozitorijuma neće biti moguće 
+
+```{bash}
+  git clone https://github.com/jefimija-stamenovic/api-library.git
+  cd api-library
 ```
 
+### 📦 2. Podešavanje virtuelnog okruženja 
+
+```{bash}
+python -m venv naziv-virtualnog-okruzenja
+.\naziv-virtualnog-okruzenja\Scripts\Activate.ps1
+```
+
+### 📄 3. Instalacija zavisnosti 
+```{bash}
+  pip install -r requirements.txt
+```
 > [!TIP]  
 > Ukoliko ažurirate postojeće zavisnosti tj. biblioteke ili dodajete nove, možete ažurirati `requirements.txt` fajl sledećom komandom:  
 >  
@@ -137,6 +155,8 @@ pip install -r requirements.txt
 ### Upravljanje okruženjem i konfiguracijom aplikacije
 Česta praksa prilikom razvoja web aplikacija jeste razdvajanje razvojnog (development) i produkcionog (production) okruženja, a razlog za to je njihova različita namena. Razvojno okruženje se koristi kada je potrebno da se testiraju nove funkcionalnosti ili da se otklone uočene nepravilnosti u radu aplikacije, dok je produkciono okruženje namenjeno korisnicima i mora da bude stabilno i pouzdano. Ovakva praksa omogućava programerima da rade bez rizika od narušavanja rada aplikacije u realnom vremenu. Pored toga, oba okruženja uglavnom imaju različite konfiguracione parametre - pristup bazi, logovanje ili bezbedonosna podešavanja što doprinosi fleksibilnosti i sigurnosti u radu. 
 
+## 🔒 Zaključak
+FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 
 
 ## Literatura
 
