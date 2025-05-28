@@ -5,7 +5,19 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(
     title="Biblioteka API",
     description="REST API za upravljanje bibliotekom",
-    version="1.0.0"
+    version="1.0.0",
+    contact={
+        "name" : "Jefimija Stamenovic", 
+        "url" : "https://github.com/jefimija-stamenovic", 
+        "email" : "jefimija.stamenovic@gmail.com"
+    },
+    license_info={
+        "name" : "Apache 2.0", 
+        "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }, 
+    docs_url="/docs/swagger", 
+    redoc_url="/docs/redoc", 
+    openapi_url="/openapi.json"
 )
 
 app.add_middleware(

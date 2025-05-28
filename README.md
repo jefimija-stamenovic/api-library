@@ -146,10 +146,10 @@ Nakon kloniranja projekta, klonirani projekat bi trebalo da ima sledeću struktu
   │   ├── repositories/  # DAL => rad sa bazom podataka
   │   ├── models/        # SQLAlchemy modeli
   │   ├── schemas/       # Pydantic šeme
-  │   ├── core/          # Definicije konfiguracija 
+  │   ├── core/          # Učitavanje konfiguracija, pomoćne funkcije i sl.  
   │   └── main.py        # Glavni fajl
-  ├── requirements.txt
-  ├── .env
+  ├── requirements.txt   # Potrebne biblioteke 
+  ├── .env               # Podešavanje okruženja
   │   ├── prod.env       # Podešavanja za produkciono okruženje 
   │   └── dev.env        # Podešavanja za razvojno okruženje 
   ├── alembic.ini
@@ -170,25 +170,63 @@ python -m venv naziv-virtualnog-okruzenja
 > [!TIP]  
 > Ukoliko ažurirate postojeće zavisnosti tj. biblioteke ili dodajete nove, možete ažurirati `requirements.txt` fajl sledećom komandom:  
 >  
-> ```bash  
+> ```{bash}  
 > pip freeze > requirements.txt  
 > ```
 
-### 📄 4. Instalacija zavisnosti 
+### 📄 4. Pokretanje aplikacije
 
 ### Upravljanje okruženjem i konfiguracijom aplikacije
 Česta praksa prilikom razvoja web aplikacija jeste razdvajanje razvojnog (development) i produkcionog (production) okruženja, a razlog za to je njihova različita namena. Razvojno okruženje se koristi kada je potrebno da se testiraju nove funkcionalnosti ili da se otklone uočene nepravilnosti u radu aplikacije, dok je produkciono okruženje namenjeno korisnicima i mora da bude stabilno i pouzdano. Ovakva praksa omogućava programerima da rade bez rizika od narušavanja rada aplikacije u realnom vremenu. Pored toga, oba okruženja uglavnom imaju različite konfiguracione parametre - pristup bazi, logovanje ili bezbedonosna podešavanja što doprinosi fleksibilnosti i sigurnosti u radu. 
 
-U zavisnosti od toga koje okruženje želite da pokrenete, program pokrećete sa dodatnim parametrom --test za testno okruženje 
+U folderu env se nalaze dva fajla prod.env i test.env sa promenljivama koje su potrebne za podešavanje okruženja aplikacije i one mogu da se podešavaju i menjaju u skladu sa potrebama. 
+
+### Pokretanje aplikacije
+U zavisnosti od toga koje okruženje je potrebno, prilikom pokretanja programa se dodaje određeni parametar. Ako je potrebno testno okruženje, onda se pokreće sledećom komandom: 
 
 ```{bash}
   python -m app.main --test
 ```
-ili sa dodatnim parametrom --prod za produkciono okruženje 
+Ako je, pak, potrebno produkciono okruženje, onda se dodaje argument --prod
 
 ```{bash}
   python -m app.main --prod
 ```
+
+## 📄 Dokumentacija API-ja: Swagger i ReDoc 
+U prethodnim poglavljima je rečeno da je jedna od glavnih prednosti FastAPI framework-a ta što ima ugrađenu podršku za automatsko generisanje dokumentacije API-ja koja se oslanja na OpenAPI specifikaciju (ranije poznata i kao Swagger dokumentacija). Ova funkcionalnost FastAPI-ja u mnogome olakšava kako rad programerima, tako i krajnjim korisnicima API-ja jer imaju mogućnost brzog uvida u dostupne rute, parametre i očekivane odgovore. 
+
+### SwaggerUI 
+SwaggerUI interfejsu se pristupa preko rute /documentation/swagger. Ovaj interfejs predstavlja interaktivni web interfejs za pregled i testiranje API-ja bez potrebe za korišćenjem nekih drugih eksternih alata poput Postman-a ili curl-a. 
+
+### ReDoc
+ReDoc je drugi interaktivni web interfejs za pregled i testiranje API-ja koji je dostupan na ruti /documentation/redoc. Sam koncept ReDoc dokumentacije je drugačiji od Swagger-a jer je kod njega akcenat na strukturalno uređenoj i vizuelno čitljivijoj prezentaciji API-ja. Posebno je stavljen akcenat na hijerarhijsku navigaciju i detaljne opise polja i parametrima. ReDoc je često korišćen u produkciji gde je čitanje dokumentacije mnogo bitnije od interaktivnog testiranja. 
+
+### Konfiguracija Swagger i ReDoc dokumentacije
+Konfiguracija oba web interfejsa dokumentacije, tačnije definisanje ruta, se vrši prilikom inicijalizacije FastAPI aplikacije u main.py fajlu i to podešavanjem parametara *docs_url* i *redoc_url*: 
+
+```{python}
+
+app = FastAPI(
+    title="Biblioteka API",
+    description="REST API za upravljanje bibliotekom",
+    version="1.0.0",
+    contact={
+        "name" : "Jefimija Stamenovic", 
+        "url" : "https://github.com/jefimija-stamenovic", 
+        "email" : "jefimija.stamenovic@gmail.com"
+    },
+    license_info={
+        "name" : "Apache 2.0", 
+        "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }, 
+    docs_url="/docs/swagger", 
+    redoc_url="/docs/redoc", 
+    openapi_url="/openapi.json"
+)
+```
+
+
 ## 🔒 Zaključak
 FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 
 
