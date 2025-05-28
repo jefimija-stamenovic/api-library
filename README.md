@@ -202,13 +202,13 @@ Ako je, pak, potrebno produkciono okruženje, onda se dodaje argument --prod
 U prethodnim poglavljima je rečeno da je jedna od glavnih prednosti FastAPI framework-a ta što ima ugrađenu podršku za automatsko generisanje dokumentacije API-ja koja se oslanja na OpenAPI specifikaciju (ranije poznata i kao Swagger dokumentacija). Ova funkcionalnost FastAPI-ja u mnogome olakšava kako rad programerima, tako i krajnjim korisnicima API-ja jer imaju mogućnost brzog uvida u dostupne rute, parametre i očekivane odgovore. 
 
 ### SwaggerUI 
-SwaggerUI interfejsu se pristupa preko rute /documentation/swagger. Ovaj interfejs predstavlja interaktivni web interfejs za pregled i testiranje API-ja bez potrebe za korišćenjem nekih drugih eksternih alata poput Postman-a ili curl-a. 
+SwaggerUI interfejsu se pristupa preko rute */docs/swagger*. Ovaj interfejs predstavlja interaktivni web interfejs za pregled i testiranje API-ja bez potrebe za korišćenjem nekih drugih eksternih alata poput Postman-a ili curl-a. 
 
 ### ReDoc
-ReDoc je drugi interaktivni web interfejs za pregled i testiranje API-ja koji je dostupan na ruti /documentation/redoc. Sam koncept ReDoc dokumentacije je drugačiji od Swagger-a jer je kod njega akcenat na strukturalno uređenoj i vizuelno čitljivijoj prezentaciji API-ja. Posebno je stavljen akcenat na hijerarhijsku navigaciju i detaljne opise polja i parametrima. ReDoc je često korišćen u produkciji gde je čitanje dokumentacije mnogo bitnije od interaktivnog testiranja. 
+ReDoc je drugi interaktivni web interfejs za pregled i testiranje API-ja koji je dostupan na ruti */docs/redoc*. Sam koncept ReDoc dokumentacije je drugačiji od Swagger-a jer je kod njega akcenat na strukturalno uređenoj i vizuelno čitljivijoj prezentaciji API-ja. Posebno je stavljen akcenat na hijerarhijsku navigaciju i detaljne opise polja i parametrima. ReDoc je često korišćen u produkciji gde je čitanje dokumentacije mnogo bitnije od interaktivnog testiranja. 
 
 ### Konfiguracija Swagger i ReDoc dokumentacije
-Konfiguracija oba web interfejsa dokumentacije, tačnije definisanje ruta, se vrši prilikom inicijalizacije FastAPI aplikacije u main.py fajlu i to podešavanjem parametara *docs_url* i *redoc_url*: 
+Konfiguracija oba web interfejsa dokumentacije, tačnije definisanje njihovih ruta na osnovu kojih im se pristupa, se vrši prilikom inicijalizacije FastAPI aplikacije u **main.py** fajlu i to podešavanjem parametara *docs_url* i *redoc_url*: 
 
 ```{python}
 
@@ -230,7 +230,6 @@ app = FastAPI(
     openapi_url="/openapi.json"
 )
 ```
-
 
 ## 🔒 Zaključak
 FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 
