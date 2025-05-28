@@ -1,3 +1,4 @@
+
 - [📕 Biblioteka API](#-biblioteka-api)
   - [📝 Opis projekta](#-opis-projekta)
   - [💡Šta je FastAPI?](#šta-je-fastapi)
@@ -16,11 +17,15 @@
       - [Struktura projekta](#struktura-projekta)
     - [📦 2. Podešavanje virtuelnog okruženja](#-2-podešavanje-virtuelnog-okruženja)
     - [📄 3. Instalacija zavisnosti](#-3-instalacija-zavisnosti)
-    - [📄 4. Instalacija zavisnosti](#-4-instalacija-zavisnosti)
+    - [📄 4. Pokretanje aplikacije](#-4-pokretanje-aplikacije)
     - [Upravljanje okruženjem i konfiguracijom aplikacije](#upravljanje-okruženjem-i-konfiguracijom-aplikacije)
+    - [Pokretanje aplikacije](#pokretanje-aplikacije)
+  - [📄 Dokumentacija API-ja: Swagger i ReDoc](#-dokumentacija-api-ja-swagger-i-redoc)
+    - [SwaggerUI](#swaggerui)
+    - [ReDoc](#redoc)
+    - [Konfiguracija Swagger i ReDoc dokumentacije](#konfiguracija-swagger-i-redoc-dokumentacije)
   - [🔒 Zaključak](#-zaključak)
   - [📚 Literatura](#-literatura)
-
 
 # 📕 Biblioteka API
 ![68747470733a2f2f666173746170692e7469616e676f6c6f2e636f6d2f696d672f6c6f676f2d6d617267696e2f6c6f676f2d7465616c2e706e67](https://github.com/user-attachments/assets/36d292dc-f290-473e-b2d7-03d9a1f22591)
