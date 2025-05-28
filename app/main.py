@@ -1,7 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-import app.core.config
 #from app.api.routes import router as api_router  # Импорт целог API entrypoint-а
 
 app = FastAPI(
@@ -25,3 +23,9 @@ app.add_middleware(
 @app.get("/ping")
 def ping() -> dict[str, str]:
     return {"message": "pong 🏓"}
+
+if __name__ == "__main__": 
+    import uvicorn
+    from app.core.config import settings
+
+    uvicorn.run("app.main:app", host=settings.APP_HOST, port=settings.APP_PORT, reload=True)

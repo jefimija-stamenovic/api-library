@@ -179,6 +179,16 @@ python -m venv naziv-virtualnog-okruzenja
 ### Upravljanje okruženjem i konfiguracijom aplikacije
 Česta praksa prilikom razvoja web aplikacija jeste razdvajanje razvojnog (development) i produkcionog (production) okruženja, a razlog za to je njihova različita namena. Razvojno okruženje se koristi kada je potrebno da se testiraju nove funkcionalnosti ili da se otklone uočene nepravilnosti u radu aplikacije, dok je produkciono okruženje namenjeno korisnicima i mora da bude stabilno i pouzdano. Ovakva praksa omogućava programerima da rade bez rizika od narušavanja rada aplikacije u realnom vremenu. Pored toga, oba okruženja uglavnom imaju različite konfiguracione parametre - pristup bazi, logovanje ili bezbedonosna podešavanja što doprinosi fleksibilnosti i sigurnosti u radu. 
 
+U zavisnosti od toga koje okruženje želite da pokrenete, program pokrećete sa dodatnim parametrom --test za testno okruženje 
+
+```{bash}
+  python -m app.main --test
+```
+ili sa dodatnim parametrom --prod za produkciono okruženje 
+
+```{bash}
+  python -m app.main --prod
+```
 ## 🔒 Zaključak
 FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 
 
