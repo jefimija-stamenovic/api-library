@@ -129,7 +129,7 @@ Za uspešno pokretanje projekta, potrebno je prethodno podesiti okruženje što 
 Ovaj projekat se nalazi na *Github*-u, pa je prvi korak ka pokretanju projekta njegovo preuzimanje na lokalni računar putem komande: 
 
 > [!WARNING]
-> Pre nego što pokušate da preuzmete projekat koristeći komandu ispod, proverite da li na računaru imate instaliran Git CLI. Bez njega, komanda **git clone** neće niti prepoznata i preuzimanje repozitorijuma neće biti moguće 
+> Pre nego što pokušate da preuzmete projekat koristeći komandu ispod, proverite da li na računaru imate instaliran Git CLI. Bez njega, komanda **git clone** neće biti prepoznata i preuzimanje repozitorijuma neće biti moguće 
 
 ```{bash}
   git clone https://github.com/jefimija-stamenovic/api-library.git
