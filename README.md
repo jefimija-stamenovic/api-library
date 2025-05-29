@@ -1,6 +1,16 @@
 
-- [📕 Biblioteka API](#-biblioteka-api)
-  - [📝 Opis projekta](#-opis-projekta)
+# 📕 Biblioteka API
+![68747470733a2f2f666173746170692e7469616e676f6c6f2e636f6d2f696d672f6c6f676f2d6d617267696e2f6c6f676f2d7465616c2e706e67](https://github.com/user-attachments/assets/36d292dc-f290-473e-b2d7-03d9a1f22591)
+## 📝 Opis projekta
+
+> [!NOTE]
+> Projekat je kreiran u okviru seminarskog rada na predmetu **Napredno softversko inženjerstvo** na master akademskim studijama Elektronskog fakulteta Univerziteta u Nišu, smer Računarstvo i informatika, modul Softversko inženjerstvo. 
+
+Repozitorijum sadrži implementaciju REST API servisa razvijenog uz pomoć **FastAPI** *framework*-a. Cilj projekta je da se prikaže praktična primena savremenih *backend* tehnologija baziranih na asinhronom radu, tipskoj bezbednosti i automatskoj validaciji podataka. 
+
+U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom. Servis je razvijen u skladu sa troslojnom arhitekturom UI-BL-DAL, za rad sa podacima je primenjen ORM model **SQLAlchemy**, podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane **FastAPI**-a. 
+
+## 📙Sadržaj
   - [💡Šta je FastAPI?](#šta-je-fastapi)
   - [❓ Koji problemi se rešavaju?](#-koji-problemi-se-rešavaju)
   - [🚀 Zašto baš FastAPI?](#-zašto-baš-fastapi)
@@ -26,17 +36,6 @@
     - [Konfiguracija Swagger i ReDoc dokumentacije](#konfiguracija-swagger-i-redoc-dokumentacije)
   - [🔒 Zaključak](#-zaključak)
   - [📚 Literatura](#-literatura)
-
-# 📕 Biblioteka API
-![68747470733a2f2f666173746170692e7469616e676f6c6f2e636f6d2f696d672f6c6f676f2d6d617267696e2f6c6f676f2d7465616c2e706e67](https://github.com/user-attachments/assets/36d292dc-f290-473e-b2d7-03d9a1f22591)
-## 📝 Opis projekta
-
-> [!NOTE]
-> Projekat je kreiran u okviru seminarskog rada na predmetu **Napredno softversko inženjerstvo** na master akademskim studijama Elektronskog fakulteta Univerziteta u Nišu, smer Računarstvo i informatika, modul Softversko inženjerstvo. 
-
-Repozitorijum sadrži implementaciju REST API servisa razvijenog uz pomoć **FastAPI** *framework*-a. Cilj projekta je da se prikaže praktična primena savremenih *backend* tehnologija baziranih na asinhronom radu, tipskoj bezbednosti i automatskoj validaciji podataka. 
-
-U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom. Servis je razvijen u skladu sa troslojnom arhitekturom UI-BL-DAL, za rad sa podacima je primenjen ORM model **SQLAlchemy**, podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane **FastAPI**-a. 
 
 ## 💡Šta je FastAPI? 
 **FastAPI** je moderan i brz Python web *framework* namenjen brzom i jednostavnom pravljenju REST API servisa. Pruža sve što je potrebno za razvoj savremenih API-ja - od definisanja ruta i obrade podataka, pa do vraćanja odgovora klijentu i rukovanja greškama. 
