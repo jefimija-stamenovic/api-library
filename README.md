@@ -253,7 +253,7 @@ Primer SQLAlchemy modela **Book**:
     author = relationship("Author", back_populates="books")
 ```
 Objašnjenje => Klasa **Book** predstavlja entitet **Knjiga**, a u bazi je mapirana na tabelu **books**. Svaka knjiga je opisana sa atributima čije je objašnjenje dato u tablici ispod: 
-| Naziv kolone      | Tip podatka     | Опис                                                                 |
+| Naziv kolone      | Tip podatka     | Opis                                                                 |
 |-------------------|-----------------|----------------------------------------------------------------------|
 | `id`              | Integer         | Primarni ključ čija je vrednost *autoincrement* tj. automatski se uvećava i podignut je indeks po ovoj koloni |
 | `title`           | String(100)     | Naslov knjige sa maksimalnom dužinom od 100 karaktera |
@@ -270,19 +270,24 @@ author = relationship("Author", back_populates="books")
 ```
 
 > [!IMPORTANT]
-> Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika - u fajlu **alembic.ini** je dodat sledeći kod:
-```{python}
-from app.core.db import Base
-from app.models.base import *
-target_metadata = Base.metadata
-```
-> dok se u **app\models\base.py** navode svi modeli koji se koriste u aplikaciji: 
-```{python}
-from app.models.user import User
-from app.models.author import Author
-from app.models.book import Book
-```
-> Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl **alembic.ini**
+> Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika – u fajlu **alembic.ini** je dodat sledeći kod:
+>
+> ```python
+> from app.core.db import Base
+> from app.models.base import *
+> target_metadata = Base.metadata
+> ```
+>
+> dok se u **app/models/base.py** navode svi modeli koji se koriste u aplikaciji:
+>
+> ```python
+> from app.models.user import User
+> from app.models.author import Author
+> from app.models.book import Book
+> ```
+>
+> Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl **alembic.ini**.
+
 
 ## Business Layer => services 
 
