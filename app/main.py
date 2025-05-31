@@ -28,16 +28,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Увезујемо све руте из API слоја
-#app.include_router(api_router)
-
-# Healthcheck рутa
 @app.get("/ping")
 def ping() -> dict[str, str]:
-    return {"message": "pong 🏓"}
+    return {"message": "Server uspešno radi!"}
 
 if __name__ == "__main__": 
     import uvicorn
+    from app.core.db import Database
     from app.core.config import settings
 
+    db : Database = Database(settings=settings)
     uvicorn.run("app.main:app", host=settings.APP_HOST, port=settings.APP_PORT, reload=True)
