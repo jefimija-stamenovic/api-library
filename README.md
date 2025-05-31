@@ -37,7 +37,9 @@ U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom.
     - [SwaggerUI](#swaggerui)
     - [ReDoc](#redoc)
     - [Konfiguracija Swagger i ReDoc dokumentacije](#konfiguracija-swagger-i-redoc-dokumentacije)
-  - [Data Access Layer =\> repositories](#data-access-layer--repositories)
+  - [SQLALchemy modeli](#sqlalchemy-modeli)
+  - [Pydantic šeme](#pydantic-šeme)
+  - [Data Access Layer (app\\repositories)](#data-access-layer-apprepositories)
   - [Business Layer =\> services](#business-layer--services)
   - [User Interface Layer =\> api](#user-interface-layer--api)
   - [🔒 Zaključak](#-zaključak)
@@ -235,8 +237,8 @@ app = FastAPI(
     openapi_url="/openapi.json"
 )
 ```
-## Data Access Layer => repositories
-U okviru foldera **repositories** se nalaze svi SQLAlchemy modeli potrebni za rad aplikacije. 
+## SQLALchemy modeli
+U okviru foldera **app/models** se nalaze svi SQLAlchemy modeli potrebni za rad aplikacije. 
 Primer SQLAlchemy modela **Book**: 
 ```python
   class Book(Base):
@@ -252,7 +254,12 @@ Primer SQLAlchemy modela **Book**:
     author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
     author = relationship("Author", back_populates="books")
 ```
-Objašnjenje => Klasa **Book** predstavlja entitet **Knjiga**, a u bazi je mapirana na tabelu **books**. Svaka knjiga je opisana sa atributima čije je objašnjenje dato u tablici ispod: 
+Objašnjenje => Klasa **Book** predstavlja entitet **Knjiga** koji je u bazi mapiran na tabelu **books** što i prikazuje naredna sekcija koda: 
+```python
+class Book(Base):
+    __tablename__ = "books"
+```
+Svaka knjiga je opisana sa atributima (u SQLAlchemy su to objekti **Column**) čija objašnjenja data u tablici ispod: 
 | Naziv kolone      | Tip podatka     | Opis                                                                 |
 |-------------------|-----------------|----------------------------------------------------------------------|
 | `id`              | Integer         | Primarni ključ čija je vrednost *autoincrement* tj. automatski se uvećava i podignut je indeks po ovoj koloni |
@@ -288,6 +295,44 @@ author = relationship("Author", back_populates="books")
 >
 > Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl **alembic.ini**.
 
+## Pydantic šeme
+
+```python
+  class SchemaBookCreate(BaseModel): 
+    title : str  = Field(..., min_length=1)
+    description: Optional[str] = Field(None, max_length=2000)
+    publication_date: Optional[date] = Field(None)
+    isbn : str = Field(..., min_length=10, max_length=20)
+    available: bool = Field(...)
+    author_id: int = Field(..., gt=0)
+
+    model_config = ConfigDict(from_attributes=True)
+
+```
+
+> [!NOTE]
+> Moguće je direktno konvertovanje ORM modela u Pydantic šeme:  
+> ```python
+>   model_config = ConfigDict(from_attributes=True)
+> ```
+> Ovo je izuzetno korisno jer omogućava da se ORM objekti dobijeni od DAL sloja automatski pretvore u Pydantic šeme (DTO) bez ručnog mapiranja 
+
+## Data Access Layer (app\repositories)
+Kao što je već rečeno, ovaj sloj je posrednik između baze podataka i poslovne logike aplikacije. U okviru njega se nalaze sve funkcije koje se tiču uzimanja, kreiranja, ažuriranja i brisanja podataka.
+```python 
+class RepositoryBook:
+    def __init__(self, db: Session):
+        self.db = db
+
+    def create(self, book: Book) -> Book:
+        self.db.add(book)
+        self.db.commit()
+        self.db.refresh(book)
+        return book
+
+    def get_by_id(self, book_id: int) -> Optional[Book]:
+        return self.db.query(Book).filter(Book.id == book_id).first()
+```
 
 ## Business Layer => services 
 
