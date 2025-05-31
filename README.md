@@ -296,7 +296,12 @@ author = relationship("Author", back_populates="books")
 > Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl **alembic.ini**.
 
 ## Pydantic šeme
+U FastAPI-u se često koriste Pydantic šeme koje se koriste za validiranje i strukturisanje ulaznih i izlaznih podataka. Tehnički, one se ponašaju kao DTO-vi (Data Transfer Objects) tj. kao objekti za prenos podataka na relaciji klijent-aplikacija ili različitih slojeva aplikacije. 
 
+> [!CAUTION]
+> SQLAlchemy modeli služe za opisivanje strukture podataka u bazi i koriste se za rad na DAL nivou, dok se Pydantic šeme koriste isključivo za definisanje struktura podataka koje se primaju ili šalju preko API-ja. 
+
+Primer jedne Pydantic šeme: 
 ```python
   class SchemaBookCreate(BaseModel): 
     title : str  = Field(..., min_length=1)
@@ -307,8 +312,8 @@ author = relationship("Author", back_populates="books")
     author_id: int = Field(..., gt=0)
 
     model_config = ConfigDict(from_attributes=True)
-
 ```
+**SchemaBookCreate** je DTO za kreiranje knjige i ima određena polja. Svako polje u klasi ima neke uslove - naslov ne sme biti prazan, isbn mora da ima između 10 i 20 karaktera, dok autor mora biti pozitivan ceo broj. 
 
 > [!NOTE]
 > Moguće je direktno konvertovanje ORM modela u Pydantic šeme:  
