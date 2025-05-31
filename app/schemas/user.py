@@ -1,30 +1,31 @@
-from pydantic import BaseModel, EmailStr, field_validator 
+from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Any
 import re
 
 class SchemaUserRegister(BaseModel):
-    first_name: str 
-    last_name: str 
-    email : EmailStr 
-    username: str  
-    password: str
-    is_admin: bool
+    first_name: str = Field(..., min_length=2, max_length=50, description="First name of user")
+    last_name: str = Field(..., min_length=2, max_length=50, description="Last name of user")
+    email : EmailStr = Field(..., description="Email of user")
+    username: str = Field(..., min_length=4, max_length=20, description="Username")
+    password: str = Field(..., min_length=8, description="Password")
+    is_admin: bool = Field(False, description="Is user administrator?")
 
-    @field_validator('first_name', 'last_name')
-    def validator_name(cls, value) -> Any: 
-        if not re.match(r'^[A-Za-zČĆŽŠĐčćžšđ ]{2,50}$', value): 
-            raise ValueError("Ime i prezime smeju da sadrže samo slova i da budu dužine između 2 i 50 karaktera")
-        return value 
+    @field_validator("first_name", "last_name")
+    def validate_name(cls, value: str) -> str:
+        pattern = r"^[A-Za-zČĆŽŠĐčćžšđ\s\-]+$"
+        if not re.match(pattern, value):
+            raise ValueError("Name must contain only letters, spaces, or hyphens.")
+        return value
     
     @field_validator("username")
-    def validate_username(cls, value)-> Any:
-        if not re.match(r'^[a-zA-Z0-9_]{4,20}$', value):
-            raise ValueError("Korisničko ime mora biti između 4 i 50 karaktera, a sme sadržati samo slova, brojeve i donju crtu")
+    def validate_username(cls, value: str)-> str:
+        if not re.match(r'^[a-zA-Z0-9_]+$', value):
+            raise ValueError("Username can only contain letters, digits, and underscores.")
         return value
     
     @field_validator("password")
-    def validate_password(cls, value) -> Any: 
-        pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$'
+    def validate_password(cls, value: str) -> str: 
+        pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$'
         if not re.match(pattern, value):
-            raise ValueError("Lozinka mora imati najmanje 8 karaktera, jedno veliko i malo slovo, jedan broj i specijalni karakter")
+            raise ValueError("Password must be at least 8 characters long, and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")
         return value

@@ -11,6 +11,9 @@ Repozitorijum sadrži implementaciju REST API servisa razvijenog uz pomoć **Fas
 U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom. Servis je razvijen u skladu sa troslojnom arhitekturom UI-BL-DAL, za rad sa podacima je primenjen ORM model **SQLAlchemy**, podaci se čuvaju u MySQL bazi podataka, dok su **Pydantic** modeli korišćeni za validaciju podataka pristiglih od korisnika i pretvaranje u formate koji su podržani od strane **FastAPI**-a. 
 
 ## 📙Sadržaj
+- [📕 Biblioteka API](#-biblioteka-api)
+  - [📝 Opis projekta](#-opis-projekta)
+  - [📙Sadržaj](#sadržaj)
   - [💡Šta je FastAPI?](#šta-je-fastapi)
   - [❓ Koji problemi se rešavaju?](#-koji-problemi-se-rešavaju)
   - [🚀 Zašto baš FastAPI?](#-zašto-baš-fastapi)
@@ -34,6 +37,9 @@ U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom.
     - [SwaggerUI](#swaggerui)
     - [ReDoc](#redoc)
     - [Konfiguracija Swagger i ReDoc dokumentacije](#konfiguracija-swagger-i-redoc-dokumentacije)
+  - [Data Access Layer =\> repositories](#data-access-layer--repositories)
+  - [Business Layer =\> services](#business-layer--services)
+  - [User Interface Layer =\> api](#user-interface-layer--api)
   - [🔒 Zaključak](#-zaključak)
   - [📚 Literatura](#-literatura)
 
@@ -229,6 +235,23 @@ app = FastAPI(
     openapi_url="/openapi.json"
 )
 ```
+## Data Access Layer => repositories
+Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika - u fajlu **alembic.ini** je dodat sledeći kod:
+```{python}
+from app.core.db import Base
+from app.models.base import *
+target_metadata = Base.metadata
+```
+dok se u **app\models\base.py** navode svi modeli koji se koriste u aplikaciji: 
+```{python}
+from app.models.user import User
+from app.models.author import Author
+from app.models.book import Book
+```
+Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl **alembic.ini**
+## Business Layer => services 
+
+## User Interface Layer => api 
 
 ## 🔒 Zaključak
 FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 

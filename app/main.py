@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-#from app.api.routes import router as api_router  # Импорт целог API entrypoint-а
+from app.core.config import settings
+from app.api.auth import router as router_user
 
 app = FastAPI(
-    title="Biblioteka API",
-    description="REST API za upravljanje bibliotekom",
+    title="Library API",
+    description="Welcome to the ** Library API** - a RESTful backend server built with **FastAPI**",
+    summary="Backend API for managing books, users and authors in a digital library.", 
     version="1.0.0",
     contact={
         "name" : "Jefimija Stamenovic", 
@@ -22,20 +24,27 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Промени у production-у ако треба
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/ping")
-def ping() -> dict[str, str]:
-    return {"message": "Server uspešno radi!"}
+@app.get("/", 
+         tags=["Welcome"])
+def welcome_route() -> dict[str, str]:
+    return {
+        "message": "Welcome to the API Library — your FastAPI backend is up and running!",
+        "swagger_documentation_url": f"http://{settings.APP_HOST}:{settings.APP_PORT}/docs/swagger",
+        "redoc_documentation_url": f"http://{settings.APP_HOST}:{settings.APP_PORT}/docs/redoc"
+    }
 
+app.include_router(router_user)
 if __name__ == "__main__": 
     import uvicorn
     from app.core.db import Database
-    from app.core.config import settings
+    
 
+    
     db : Database = Database(settings=settings)
     uvicorn.run("app.main:app", host=settings.APP_HOST, port=settings.APP_PORT, reload=True)
