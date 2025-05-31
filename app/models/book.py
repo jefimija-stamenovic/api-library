@@ -12,6 +12,5 @@ class Book(Base):
     isbn = Column(String(20), unique=True, nullable=False)
     available = Column(Boolean, default=True)
 
-    # Kreiranje veze izmedju autora i knjige
     author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
     author = relationship("Author", back_populates="books")

@@ -236,6 +236,24 @@ app = FastAPI(
 )
 ```
 ## Data Access Layer => repositories
+U okviru foldera **repositories** se nalaze SQLAlchemy model. 
+
+Primer jednog SQLAlchemy modela: 
+```{python}
+  class Book(Base):
+    __tablename__ = "books"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(100), nullable=False, index=True)
+    description = Column(Text, nullable=True)
+    publication_date = Column(Date, nullable=True)
+    isbn = Column(String(20), unique=True, nullable=False)
+    available = Column(Boolean, default=True)
+
+    author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
+    author = relationship("Author", back_populates="books")
+```
+
 Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika - u fajlu **alembic.ini** je dodat sledeći kod:
 ```{python}
 from app.core.db import Base
