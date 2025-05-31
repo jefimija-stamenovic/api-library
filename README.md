@@ -236,9 +236,8 @@ app = FastAPI(
 )
 ```
 ## Data Access Layer => repositories
-U okviru foldera **repositories** se nalaze SQLAlchemy model. 
-
-Primer jednog SQLAlchemy modela: 
+U okviru foldera **repositories** se nalaze svi SQLAlchemy modeli potrebni za rad aplikacije. 
+Primer SQLAlchemy modela **Book**: 
 ```{python}
   class Book(Base):
     __tablename__ = "books"
@@ -253,20 +252,38 @@ Primer jednog SQLAlchemy modela:
     author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
     author = relationship("Author", back_populates="books")
 ```
+Objašnjenje => Klasa **Book** predstavlja entitet **Knjiga**, a u bazi je mapirana na tabelu **books**. Svaka knjiga je opisana sa atributima čije je objašnjenje dato u tablici ispod: 
+| Naziv kolone      | Tip podatka     | Опис                                                                 |
+|-------------------|-----------------|----------------------------------------------------------------------|
+| `id`              | Integer         | Primarni ključ čija je vrednost *autoincrement* tj. automatski se uvećava i podignut je indeks po ovoj koloni |
+| `title`           | String(100)     | Naslov knjige sa maksimalnom dužinom od 100 karaktera |
+| `description`     | Text            | Opis ili kratak sadržaj knjige koji nije obavezno uneti |
+| `publication_date`| Date            | Datum objavljivanja knjige koji nije obavezno uneti |
+| `isbn`            | String(20)      | Jedinstveni ISBN broj koji mora da se unese |
+| `available`       | Boolean         | Identifikator da li je knjiga dostupna, a podrazumevana vrednost je da jeste |
 
-Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika - u fajlu **alembic.ini** je dodat sledeći kod:
+Za svaku knjigu treba znati i njenog autora, pa je potrebno postaviti referencu na autora. 
+Referenciranje podrazumeva postavljanje stranog ključa **author_id** i navigacije **relationship()**: 
+```{python}
+author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
+author = relationship("Author", back_populates="books")
+```
+
+> [!IMPORTANT]
+> Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika - u fajlu **alembic.ini** je dodat sledeći kod:
 ```{python}
 from app.core.db import Base
 from app.models.base import *
 target_metadata = Base.metadata
 ```
-dok se u **app\models\base.py** navode svi modeli koji se koriste u aplikaciji: 
+> dok se u **app\models\base.py** navode svi modeli koji se koriste u aplikaciji: 
 ```{python}
 from app.models.user import User
 from app.models.author import Author
 from app.models.book import Book
 ```
-Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl **alembic.ini**
+> Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl **alembic.ini**
+
 ## Business Layer => services 
 
 ## User Interface Layer => api 
