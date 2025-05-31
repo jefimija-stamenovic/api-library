@@ -141,14 +141,14 @@ Ovaj projekat se nalazi na *Github*-u, pa je prvi korak ka pokretanju projekta n
 > [!WARNING]
 > Pre nego što pokušate da preuzmete projekat koristeći komandu ispod, proverite da li na računaru imate instaliran Git CLI. Bez njega, komanda **git clone** neće biti prepoznata i preuzimanje repozitorijuma neće biti moguće 
 
-```{bash}
+```bash
   git clone https://github.com/jefimija-stamenovic/api-library.git
   cd api-library
 ```
 #### Struktura projekta 
 Nakon kloniranja projekta, klonirani projekat bi trebalo da ima sledeću strukturu: 
 
-```{bash} 
+```
   api-library/
   ├── app/
   │   ├── api/           # UI => rute
@@ -168,19 +168,19 @@ Nakon kloniranja projekta, klonirani projekat bi trebalo da ima sledeću struktu
 
 ### 📦 2. Podešavanje virtuelnog okruženja 
 
-```{bash}
+```bash
 python -m venv naziv-virtualnog-okruzenja
 .\naziv-virtualnog-okruzenja\Scripts\Activate.ps1
 ```
 
 ### 📄 3. Instalacija zavisnosti 
-```{bash}
+```bash
   pip install -r requirements.txt
 ```
 > [!TIP]  
 > Ukoliko ažurirate postojeće zavisnosti tj. biblioteke ili dodajete nove, možete ažurirati `requirements.txt` fajl sledećom komandom:  
 >  
-> ```{bash}  
+> ```bash
 > pip freeze > requirements.txt  
 > ```
 
@@ -194,12 +194,12 @@ U folderu env se nalaze dva fajla prod.env i test.env sa promenljivama koje su p
 ### Pokretanje aplikacije
 U zavisnosti od toga koje okruženje je potrebno, prilikom pokretanja programa se dodaje određeni parametar. Ako je potrebno testno okruženje, onda se pokreće sledećom komandom: 
 
-```{bash}
+```bash
   python -m app.main --test
 ```
 Ako je, pak, potrebno produkciono okruženje, onda se dodaje argument --prod
 
-```{bash}
+```bash
   python -m app.main --prod
 ```
 
@@ -215,7 +215,7 @@ ReDoc je drugi interaktivni web interfejs za pregled i testiranje API-ja koji je
 ### Konfiguracija Swagger i ReDoc dokumentacije
 Konfiguracija oba web interfejsa dokumentacije, tačnije definisanje njihovih ruta na osnovu kojih im se pristupa, se vrši prilikom inicijalizacije FastAPI aplikacije u **main.py** fajlu i to podešavanjem parametara *docs_url* i *redoc_url*: 
 
-```{python}
+```python
 
 app = FastAPI(
     title="Biblioteka API",
@@ -238,7 +238,7 @@ app = FastAPI(
 ## Data Access Layer => repositories
 U okviru foldera **repositories** se nalaze svi SQLAlchemy modeli potrebni za rad aplikacije. 
 Primer SQLAlchemy modela **Book**: 
-```{python}
+```python
   class Book(Base):
     __tablename__ = "books"
 
@@ -264,7 +264,7 @@ Objašnjenje => Klasa **Book** predstavlja entitet **Knjiga**, a u bazi je mapir
 
 Za svaku knjigu treba znati i njenog autora, pa je potrebno postaviti referencu na autora. 
 Referenciranje podrazumeva postavljanje stranog ključa **author_id** i navigacije **relationship()**: 
-```{python}
+```python
 author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
 author = relationship("Author", back_populates="books")
 ```
