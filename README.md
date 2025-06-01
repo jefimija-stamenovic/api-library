@@ -815,9 +815,8 @@ def search_authors(
 
 Primer => `@router.post('/')`
 Namena: Zadatak ove rute je kreiranje tj. dodavanje novog autora. U nastavku je dato detaljno objašnjenje svakog argumenta u okviru dekoratora `@router.post('/')`
-| Element                         | Objašnjenje                                                                              |
+| Parametar                       | Objašnjenje                                                                              |
 |---------------------------------|------------------------------------------------------------------------------------------|
-| `@router.post("/")`             | Registruje **POST** rutu na `/authors`.                                                  |
 | `name="Create new author"`      | Naziv rute koji se prikazuje u OpenAPI (Swagger)                                         |
 | `summary="Create a new author"` | Kratak opis rute - pojavljuje se kao naslov u Swagger web interfejsu                     |
 | `description="""..."""`         | Detaljan opis zahteva - objašnjava koji podaci se očekuju i kako se validiraju           |
