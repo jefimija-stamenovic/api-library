@@ -284,27 +284,20 @@ Primer SQLAlchemy modela **Book**:
     author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
     author = relationship("Author", back_populates="books")
 ```
-Objašnjenje ➡️ Klasa **Book** predstavlja entitet **Knjiga** koji je u bazi mapiran na tabelu **books** što i prikazuje naredna sekcija koda: 
-```python
-class Book(Base):
-    __tablename__ = "books"
-```
-Svaka knjiga je opisana sa atributima (u SQLAlchemy su to objekti **Column**) čija objašnjenja data u tablici ispod: 
-| Naziv kolone      | Tip podatka     | Opis                                                                 |
-|-------------------|-----------------|----------------------------------------------------------------------|
-| `id`              | Integer         | Primarni ključ čija je vrednost *autoincrement* tj. automatski se uvećava i podignut je indeks po ovoj koloni |
-| `title`           | String(100)     | Naslov knjige sa maksimalnom dužinom od 100 karaktera |
-| `description`     | Text            | Opis ili kratak sadržaj knjige koji nije obavezno uneti |
-| `publication_date`| Date            | Datum objavljivanja knjige koji nije obavezno uneti |
-| `isbn`            | String(20)      | Jedinstveni ISBN broj koji mora da se unese |
-| `available`       | Boolean         | Identifikator da li je knjiga dostupna, a podrazumevana vrednost je da jeste |
 
-Za svaku knjigu treba znati i njenog autora, pa je potrebno postaviti referencu na autora. 
-Referenciranje podrazumeva postavljanje stranog ključa **author_id** i navigacije **relationship()**: 
-```python
-author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
-author = relationship("Author", back_populates="books")
-```
+| Element            | Objašnjenje                                                                                      |
+|--------------------|--------------------------------------------------------------------------------------------------|
+| `Column(...)`      | Definiše kolonu u tabeli. Prvi argument je tip (npr. `Integer`, `String`), a ostali su opcioni parametri poput `primary_key`, `nullable`, `index`, `unique`, `default`. |
+| `Integer`, `String(n)`, `Text`, `Date`, `Boolean` | Tipovi kolona  |
+| `primary_key=True` | Identifikator da li je kolona primarni ključ? |
+| `index=True`       | Identifikator za kreiranje indeksa po koloni  |
+| `nullable=False`   | Vrednost je obavezna                          |
+| `unique=True`      | Vrednost mora biti jedinstvene (npr. ISBN)    |
+| `default=...`      | Podrazumevana vrednost                        |
+| `ForeignKey(...)`  | Spoljni ključ koji referencira primarni ključ druge tabele |
+| `relationship(...)`| Kreiranje veze između tabela i omogućava pristup povezanim entitetima |
+| `back_populates`   | Održava dvosmernu vezu između dve tabele |
+
 
 > [!IMPORTANT]
 > Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika – u fajlu **alembic.ini** je dodat sledeći kod:
@@ -369,7 +362,6 @@ class SchemaBookBase(BaseModel):
 | `gt=0`                            | Vrednost mora biti veća od nule (great than).                                                                      |
 | `@field_validator("ime")`         | Dekorator za ručnu validaciju određenog polja koji se poziva automatski pri parsiranju podataka                    |
 | `raise ValueError("poruka")`      | Ako vrednost nije validna, aktivira se greška tj.FastAPI će podići HTTPException sa status kodom 422 i porukom.    |
-| `model_config = ConfigDict(...)`  | Konfiguracija ponašanja modela, npr. `from_attributes=True` omogućava ORM konverziju.                |
 
 > [!NOTE]
 > Moguće je direktno konvertovanje ORM modela u Pydantic šeme:  
