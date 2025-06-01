@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator, Field, ConfigDict
-from typing import Optional
+from app.schemas.book import SchemaBook
+from typing import Optional, List
 import re
 
 class SchemaAuthorBase(BaseModel):
@@ -18,3 +19,4 @@ class SchemaAuthorBase(BaseModel):
 
 class SchemaAuthor(SchemaAuthorBase): 
     id: int = Field()
+    books: List[SchemaBook] = Field(default_factory=List)

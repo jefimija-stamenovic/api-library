@@ -16,7 +16,7 @@ router: APIRouter = APIRouter(
                         First name and last name contain only letters, spaces or hyphens and length must
                         be between 2 and 50 characters
                     """, 
-    response_model=SchemaAuthorBase, response_description="This endpoint returns the created author", status_code=status.HTTP_201_CREATED, 
+    response_model=SchemaAuthor, response_description="This endpoint returns the created author", status_code=status.HTTP_201_CREATED, 
     responses={
         status.HTTP_201_CREATED: {
             "description": "Successfully created author",
@@ -69,7 +69,7 @@ router: APIRouter = APIRouter(
         }
     }
 )
-def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_create), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthorBase:
+def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_create), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
     try:
         return service.create(new_author)
     except ExceptionConflict as e:
