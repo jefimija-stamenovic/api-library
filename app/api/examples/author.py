@@ -21,19 +21,19 @@ example_create: Dict[str, Example] = {
 }
 
 example_update: Dict[str, Example] = {
-    "Example 1 - Basic (without books)": {
-        "summary": "Author with books",
-        "description": "The valid author with all specified fields",
-        "value":{
+    "Example 1 - Basic": {
+        "summary": "Author without books",
+        "description": "A valid author update without associated books.",
+        "value": {
             "first_name": "Danilo",
             "last_name": "Kiš",
             "biography": "Autor Grobnice za Borisa Davidoviča"
         }
     },
-    "Example 2 - update with books": {
+    "Example 2 - Author with books": {
         "summary": "Author with books",
-        "description": "The valid author with all specified fields",
-        "value":{
+        "description": "A valid author update with associated books.",
+        "value": {
             "first_name": "Danilo",
             "last_name": "Kiš",
             "biography": "Autor Grobnice za Borisa Davidoviča",
@@ -43,14 +43,14 @@ example_update: Dict[str, Example] = {
                     "title": "Grobnica za Borisa Davidoviča",
                     "isbn": "978-86-01-12345-6",
                     "available": True,
-                    "author_id": 2
+                    "author_id": 3
                 },
                 {
                     "id": 3,
                     "title": "Bašta, pepeo",
                     "isbn": "978-86-01-65432-1",
                     "available": False,
-                    "author_id": 2
+                    "author_id": 3
                 }
             ]
         }

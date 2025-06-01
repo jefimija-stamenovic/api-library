@@ -18,7 +18,7 @@ class ServiceBook:
     def delete(self, id: int) -> SchemaBook: 
         return SchemaBook.model_validate(self._repository.delete(id))
     
-    def update(self, book_id: int, updated_book: SchemaBook) -> SchemaBook: 
+    def update(self, book_id: int, updated_book: SchemaBookBase) -> SchemaBook: 
         #model_book: Book = Book(**updated_book.model_dump())   
         return self.find_by_id(book_id) 
         return SchemaBook.model_validate(self._repository.update(book_id, model_book))

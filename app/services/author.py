@@ -36,10 +36,11 @@ class ServiceAuthor:
             raise ExceptionNotFound
         dict_author: Dict[str, Any] = updated_author.model_dump(exclude_unset=True)
 
-        """if updated_author.books:
+        if updated_author.books:
             for updated_book in updated_author.books:
-                self._service_book.update(updated_book.id, updated_book)
-        """       
+                pass 
+                #self._service_book.update(updated_book.id, updated_book)
+           
         return SchemaAuthor.model_validate(self._repository.update(author_id, dict_author))
 
     def search(self, search: Optional[str]) -> List[SchemaAuthor]: 

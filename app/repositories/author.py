@@ -26,6 +26,8 @@ class RepositoryAuthor:
     def update(self, author_id, updated_data: dict) -> Author:
         updated_author: Author = self.find_by_id(author_id)
         for attr, value in updated_data.items(): 
+            if attr == 'books': 
+                continue
             setattr(updated_author, attr, value)
 
         self._session.commit()
