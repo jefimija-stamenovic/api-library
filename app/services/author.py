@@ -27,13 +27,12 @@ class ServiceAuthor:
         model_author : Author = Author(**new_author.model_dump())
         return SchemaAuthor.model_validate(self._repository.create(model_author))
     
-    def delete(self, id: int) -> SchemaAuthor: 
-        return SchemaAuthor.model_validate(self._repository.delete(id))
+    def delete(self, author_id: int) -> SchemaAuthor: 
+        founded_author: Optional[SchemaAuthor] = self.find_by_id(author_id)
+        return SchemaAuthor.model_validate(self._repository.delete(author_id))
     
     def update(self, author_id: int, updated_author: SchemaAuthorUpdate) -> SchemaAuthor: 
-        founded_author: Optional[Author] = self._repository.find_by_id(author_id)
-        if not founded_author: 
-            raise ExceptionNotFound
+        founded_author: Optional[SchemaAuthor] = self.find_by_id(author_id)
         dict_author: Dict[str, Any] = updated_author.model_dump(exclude_unset=True)
 
         if updated_author.books:

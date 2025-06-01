@@ -79,7 +79,7 @@ def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_c
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
                             detail=str(e))
 
-@router.get("/{author_id}", name="Get author by ID", summary="Retrieve author by ID",
+@router.get("/{author_id: int}", name="Get author by ID", summary="Retrieve author by ID",
     description="This endpoint retrieves the details of a specific author by their unique ID.",
     response_model=SchemaAuthor, response_description="Successfully retrieved author data.", status_code=status.HTTP_200_OK,
     responses={
@@ -91,7 +91,8 @@ def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_c
                         "id": 1,
                         "first_name": "Ivo",
                         "last_name": "Andrić",
-                        "biography": "Dobitnik Nobelove nagrade"
+                        "biography": "Dobitnik Nobelove nagrade", 
+                        "books" : []
                     }
                 }
             }
@@ -152,7 +153,7 @@ def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service
     description="This endpoint updates an author's data based on the provided ID ", 
     response_model=SchemaAuthor, status_code=status.HTTP_200_OK, 
     responses={
-        status.HTTP_201_CREATED: {
+        status.HTTP_200_OK: {
             "description": "Successfully created author",
             "content": {
                 "application/json": {
@@ -205,20 +206,34 @@ def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service
 def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openapi_examples=example_update), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
     try:
         return service.update(author_id, updated_data)
+    except ExceptionNotFound as e: 
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Author with provided ID = {author_id} does not exist."
+        )
     except ExceptionConflict as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
  
 @router.delete(
-    "/{author_id}", 
-    name = "Delete author by ID", 
-    summary = "Delete an author by provided ID", 
-    description="This endpoint deletes an author by ID from the database", 
-    status_code=status.HTTP_204_NO_CONTENT, 
+    "/{author_id}", name = "Delete author by ID", 
+    summary = "Delete an author by provided ID", description="This endpoint deletes an author by ID from the database", 
+    status_code=status.HTTP_200_OK, response_model=SchemaAuthor, 
     responses = {
-        status.HTTP_204_NO_CONTENT: {
-            "description": "Author successfully deleted."
+        status.HTTP_200_OK: {
+            "description": "Successfully deleted author",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": 1,                            
+                        "first_name": "Ivo",
+                        "last_name": "Andrić",
+                        "biography": "Dobitnik Nobelove nagrade", 
+                        "books" : []
+                    }
+                }
+            }
         },
         status.HTTP_404_NOT_FOUND: {
             "description": "Author not found.",
@@ -243,19 +258,19 @@ def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openap
     }
 )
 def delete_author(
-    author_id: int = Path(..., gt=0, description="The ID of the author for deletion"), 
-    service: ServiceAuthor = Depends(get_service)) -> None: 
+    author_id: int = Path(gt=0, description="The ID of the author for deletion"), 
+    service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor: 
     try:
-        deleted: SchemaAuthor = service.delete(author_id)
-        if not deleted:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Author with provided ID = {author_id} does not exist."
-            )
+        return service.delete(author_id)
+    except ExceptionNotFound as e: 
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Author with provided ID = {author_id} does not exist."
+        )
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal Server Error. Please try again later."
+            detail=str(e)
         )
     
 
@@ -294,8 +309,7 @@ def delete_author(
 )
 def search_authors(
     search: Optional[str] = Query(None, description="Filter by author's first name or last name or biography"),
-    service: ServiceAuthor = Depends(get_service)
-) -> List[SchemaAuthor]:
+    service: ServiceAuthor = Depends(get_service)) -> List[SchemaAuthor]:
     try:
         return service.search(search)
     except Exception:

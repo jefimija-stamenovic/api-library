@@ -34,13 +34,11 @@ class RepositoryAuthor:
         self._session.refresh(updated_author)
         return updated_author
     
-    def delete(self, author_id: int) -> bool:
+    def delete(self, author_id: int) -> Author:
         author: Optional[Author] = self.find_by_id(author_id)
-        if not author:
-            return False
         self._session.delete(author)
         self._session.commit()
-        return True
+        return author
 
     def search(self, search: Optional[str] = None) -> List[Author]:
         query: Query[Author] = self._session.query(Author)
