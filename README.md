@@ -331,19 +331,45 @@ U FastAPI-u se često koriste Pydantic šeme koje se koriste za validiranje i st
 > [!CAUTION]
 > SQLAlchemy modeli služe za opisivanje strukture podataka u bazi i koriste se za rad na DAL nivou, dok se Pydantic šeme koriste isključivo za definisanje struktura podataka koje se primaju ili šalju preko API-ja. 
 
-Primer jedne Pydantic šeme: 
+U nastavku je dat primer Pydantic šeme `SchemaBookBase`: 
 ```python
-  class SchemaBookCreate(BaseModel): 
-    title : str  = Field(..., min_length=1)
+class SchemaBookBase(BaseModel): 
+    title : str  = Field(min_length=1)
     description: Optional[str] = Field(None, max_length=2000)
     publication_date: Optional[date] = Field(None)
-    isbn : str = Field(..., min_length=10, max_length=20)
-    available: bool = Field(...)
-    author_id: int = Field(..., gt=0)
+    isbn : str = Field(min_length=10, max_length=20)
+    available: bool = Field()
+    author_id: int = Field(gt=0)
+
+    @field_validator("title")
+    def validate_title(cls, value: str) -> str:
+        pattern = r"^[A-Za-z0-9ČĆŽŠĐčćžšđ\s\-\.,!?\"'()]+$"
+        if not re.match(pattern, value):
+            raise ValueError("Title may contain letters, numbers, spaces, punctuation, and hyphens only.")
+        return value
+
+    @field_validator("isbn")
+    def validate_isbn(cls, value: str) -> str:
+        pattern = r"^[0-9\-]+$"
+        if not re.match(pattern, value):
+            raise ValueError("ISBN must contain only digits and hyphens.")
+        return value
 
     model_config = ConfigDict(from_attributes=True)
+
 ```
-**SchemaBookCreate** je DTO za kreiranje knjige i ima određena polja. Svako polje u klasi ima neke uslove - naslov ne sme biti prazan, isbn mora biti dužine između 10 i 20 karaktera, dok ID autor mora biti pozitivan ceo broj. 
+**SchemaBookCreate** je DTO za kreiranje knjige i ima određena polja. Svako polje u klasi ima neke uslove - naslov ne sme biti prazan, isbn mora biti dužine između 10 i 20 karaktera, dok ID autor mora biti pozitivan ceo broj. U tabeli je dato detaljno objašnjenje svih korišćenih elemenata: 
+
+| Element                           | Objašnjenje                                                                                                        |
+|-----------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| `BaseModel`                       | Roditeljska klasa iz koje se izvode sve Pydantic šeme. Omogućava validaciju, parsiranje i automatsku dokumentaciju |
+| `Field()`                         | Definiše dodatna pravila iinformacije za polja (npr. `min_length`, `gt`, `description`, itd.).                     |
+| `Optional[type]`                  | Polje nije obavezno                                                                                                |
+| `min_length`, `max_length`        | Minimum/maksimum dozvoljenih karaktera u stringu                                                                   |
+| `gt=0`                            | Vrednost mora biti veća od nule (great than).                                                                      |
+| `@field_validator("ime")`         | Dekorator za ručnu validaciju određenog polja koji se poziva automatski pri parsiranju podataka                    |
+| `raise ValueError("poruka")`      | Ako vrednost nije validna, aktivira se greška tj.FastAPI će podići HTTPException sa status kodom 422 i porukom.    |
+| `model_config = ConfigDict(...)`  | Konfiguracija ponašanja modela, npr. `from_attributes=True` omogućava ORM konverziju.                |
 
 > [!NOTE]
 > Moguće je direktno konvertovanje ORM modela u Pydantic šeme:  
