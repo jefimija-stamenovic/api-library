@@ -153,49 +153,55 @@ Nakon kloniranja projekta, klonirani projekat bi trebalo da ima sledeću struktu
 ```
 api-library/
 ├── app/
-│   ├── api/                        # UI sloj 
+│   ├── api/               # UI sloj (kontroleri) 
+|   |   ├── examples       # openapi primeri 
+|   |   |   ├── author.py
+│   │   |   └── book.py
+│   │   ├── auth.py
+|   |   ├── author.py
+│   │   ├── book.py
+│   │   └── user.py
+│   │
+│   ├── services/       # BL sloj (servisi)
 │   │   ├── book.py
 │   │   ├── author.py
 │   │   └── user.py
 │   │
-│   ├── services/                   # BL sloj
+│   ├── repositories/  # DAL sloj (repozitorijumi)
 │   │   ├── book.py
 │   │   ├── author.py
 │   │   └── user.py
 │   │
-│   ├── repositories/              # DAL sloj
+│   ├── models/        # SQLAlchemy modeli
 │   │   ├── book.py
 │   │   ├── author.py
 │   │   └── user.py
 │   │
-│   ├── models/                    # SQLAlchemy modeli
+│   ├── schemas/          # Pydantic šeme
 │   │   ├── book.py
 │   │   ├── author.py
 │   │   └── user.py
 │   │
-│   ├── schemas/                   # Pydantic šeme
-│   │   ├── book.py
-│   │   ├── author.py
-│   │   └── user.py
-│   │
-│   ├── core/                      # Konfiguracija, povezivanje na bazu, konstante itd.
+│   ├── core/             # Konfiguracija, povezivanje na bazu, konstante, custom klase  itd.
+│   │   ├── classes.py
 │   │   ├── config.py
 │   │   ├── constants.py
 │   │   ├── db.py
 │   │   └── security.py
 │   │
-│   └── main.py                    # Glavni program
+│   └── main.py           # Glavni program
 │
-├── alembic/                    # Alembic 
+├── alembic/              # Alembic 
 │   ├── versions/
 │   ├── env.py
 │   └── script.py.mako
 │
-├── alembic.ini                    # Alembic конфигурација
-├── requirements.txt              # Зависности
+├── alembic.ini         # Alembic konfiguracija
+├── requirements.txt    # Potrebne biblioteke
 ├── README.md
-└── .env                          # ENV променљиве (DB info, тајне, итд.)
-
+└── env                # Okruženje
+    ├── prod.env
+    └── test.env
 ```
 
 ### 📦 2. Podešavanje virtuelnog okruženja 
