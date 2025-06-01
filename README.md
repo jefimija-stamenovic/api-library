@@ -39,9 +39,9 @@ U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom.
     - [Konfiguracija Swagger i ReDoc dokumentacije](#konfiguracija-swagger-i-redoc-dokumentacije)
   - [SQLALchemy modeli](#sqlalchemy-modeli)
   - [Pydantic šeme](#pydantic-šeme)
-  - [Data Access Layer (app\\repositories)](#data-access-layer-apprepositories)
-  - [Business Layer =\> app\\services](#business-layer--appservices)
-  - [User Interface Layer =\> app\\api](#user-interface-layer--appapi)
+  - [Data Access Layer ➡️ `app\repositories`](#data-access-layer-️-apprepositories)
+  - [Business Layer ➡️ `app\services`](#business-layer-️-appservices)
+  - [User Interface Layer ➡️ `app\api`](#user-interface-layer-️-appapi)
   - [🔒 Zaključak](#-zaključak)
   - [📚 Literatura](#-literatura)
 
@@ -284,7 +284,7 @@ Primer SQLAlchemy modela **Book**:
     author_id = Column(Integer, ForeignKey("authors.id"), nullable=False)
     author = relationship("Author", back_populates="books")
 ```
-Objašnjenje => Klasa **Book** predstavlja entitet **Knjiga** koji je u bazi mapiran na tabelu **books** što i prikazuje naredna sekcija koda: 
+Objašnjenje ➡️ Klasa **Book** predstavlja entitet **Knjiga** koji je u bazi mapiran na tabelu **books** što i prikazuje naredna sekcija koda: 
 ```python
 class Book(Base):
     __tablename__ = "books"
@@ -352,7 +352,7 @@ Primer jedne Pydantic šeme:
 > ```
 > Ovo je izuzetno korisno jer omogućava da se ORM objekti dobijeni od DAL sloja automatski pretvore u Pydantic šeme (DTO) bez ručnog mapiranja 
 
-## Data Access Layer (app\repositories)
+## Data Access Layer ➡️ `app\repositories`
 Kao što je već rečeno, ovaj sloj je posrednik između baze podataka i poslovne logike aplikacije. U okviru njega se nalaze sve funkcije koje se tiču uzimanja, kreiranja, ažuriranja i brisanja podataka.
 
 U nastavku je dat primer klase **RepositoryBook** koja sadrži metode za rad sa entitom **Book**. 
@@ -430,7 +430,7 @@ class RepositoryBook:
 | `update(self, book_id: int, updated_data: dict) -> Book` | Ažuriranje knjige na osnovu prosleđenog rečnika `updated_data`       |
 | `delete(self, book_id: int) -> bool` | Briše knjigu koja ima prosleđeni ID |
 
-## Business Layer => app\services 
+## Business Layer ➡️ `app\services` 
 Servisi služe za implementiranje poslovne logike, a ujedno su posrednici između kontrolera i repozitorijuma. U okviru servisa se obavlja sva poslovna logika poput provere i pripreme podataka pre nego što se proslede DAL sloju. 
 Servisi obezbeđuju da kontroleri ne brinu o detaljima baze, dok se repozitorijumi koriste isključivo za CRUD operacije bez pisanja dodatne logike.  
 
@@ -475,7 +475,7 @@ class ServiceBook:
         books: List[Book] = self._repository.search(search, available, author_id, publication_date)
         return [SchemaBook.model_validate(book) for book in books]
 ```
-## User Interface Layer => app\api 
+## User Interface Layer ➡️ `app\api` 
 UI sloj predstavlja ulaznu tačku za sve zahteve koji dolaze preko HTTP protokola. Router koristi dekoratore `@router.get()`, `@router.post()` i dr. za definisanje ruta tj. putanja i mapira ih na funkcije koje obrađuju te zahteve. 
 
 Zadaci rutera su:
@@ -813,7 +813,7 @@ def search_authors(
 | `@router.put()`    | Prima `PUT` zahtev i koristi se za **ažuriranje** postojećeg entiteta               |
 | `@router.delete()` | Prima `DELETE` zahtev i koristi se za **brisanje** entiteta                         |
 
-Primer => `@router.post('/')`
+Primer ➡️ `@router.post('/')`
 Namena: Zadatak ove rute je kreiranje tj. dodavanje novog autora. U nastavku je dato detaljno objašnjenje svakog argumenta u okviru dekoratora `@router.post('/')`
 | Parametar                       | Objašnjenje                                                                              |
 |---------------------------------|------------------------------------------------------------------------------------------|
