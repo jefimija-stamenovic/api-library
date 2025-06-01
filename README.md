@@ -40,7 +40,7 @@ U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom.
   - [SQLALchemy modeli](#sqlalchemy-modeli)
   - [Pydantic šeme](#pydantic-šeme)
   - [Data Access Layer (app\\repositories)](#data-access-layer-apprepositories)
-  - [Business Layer =\> services](#business-layer--services)
+  - [Business Layer =\> app\\services](#business-layer--appservices)
   - [User Interface Layer =\> app\\api](#user-interface-layer--appapi)
   - [🔒 Zaključak](#-zaključak)
   - [📚 Literatura](#-literatura)
@@ -430,9 +430,9 @@ class RepositoryBook:
 | `update(self, book_id: int, updated_data: dict) -> Book` | Ažuriranje knjige na osnovu prosleđenog rečnika `updated_data`       |
 | `delete(self, book_id: int) -> bool` | Briše knjigu koja ima prosleđeni ID |
 
-## Business Layer => services 
-Servisi služe za implementiranje poslovne logike, a ujedno su posrednici između kontrolera(rutera) i repozitorijuma. U okviru ovog sloja se obavlja sva poslovna logika poput provere i pripreme podataka pre nego što se proslede DAL sloju. 
-BL sloj obezbeđuju da kontroleri ne brinu o detaljima baze, dok se repozitorijumi koriste isključivo za CRUD operacije bez pisanja dodatne logike.  
+## Business Layer => app\services 
+Servisi služe za implementiranje poslovne logike, a ujedno su posrednici između kontrolera i repozitorijuma. U okviru servisa se obavlja sva poslovna logika poput provere i pripreme podataka pre nego što se proslede DAL sloju. 
+Servisi obezbeđuju da kontroleri ne brinu o detaljima baze, dok se repozitorijumi koriste isključivo za CRUD operacije bez pisanja dodatne logike.  
 
 Dat je primer servisa **ServiceBook** u kom je implementirana logika upravljanja knjigama: 
 
@@ -477,6 +477,12 @@ class ServiceBook:
 ```
 ## User Interface Layer => app\api 
 UI sloj predstavlja ulaznu tačku za sve zahteve koji dolaze preko HTTP protokola. Router koristi dekoratore `@router.get()`, `@router.post()` i dr. za definisanje ruta tj. putanja i mapira ih na funkcije koje obrađuju te zahteve. 
+
+Zadaci rutera su:
+ - Validiranje ulaza - ruter koristi Pydantic šeme da proveri da li je zahtev ispravno formatiran (Body, Query, Path)
+ - Pozivanje servisnog sloja - unutar rutera se poziva metode servisa sa određenim parametrima i logika je prepuštena njemu 
+ - Slanje odgovora - ruter šalje odgovarajući HTTP status i telo odgovora (**response_model**)
+ - Obrada grešaka - sve greške koje dođu od strane servisa se hvataju i u zavisnosti od greške se kreira određeni **HTTPException** sa status kodom i opisom greške 
 
 Naredna sekcija koda prikazuje implementaciju kontrolera za upravljanje knjigama: 
 
@@ -799,6 +805,27 @@ def search_authors(
             detail="Internal Server Error. Please try again later."
         )
 ```
+
+| Dekorator          | Namena                                                                              |
+|--------------------|-------------------------------------------------------------------------------------|
+| `@router.post()`   | Prima `POST` zahtev i koristi se za **kreiranje** novog entiteta                    |
+| `@router.get()`    | Prima `GET` zahtev i koristi se za **čitanje** ili **pretragu** postojećih podataka |
+| `@router.put()`    | Prima `PUT` zahtev i koristi se za **ažuriranje** postojećeg entiteta               |
+| `@router.delete()` | Prima `DELETE` zahtev i koristi se za **brisanje** entiteta                         |
+
+Primer => `@router.post('/')`
+Namena: Zadatak ove rute je kreiranje tj. dodavanje novog autora. U nastavku je dato detaljno objašnjenje svakog argumenta u okviru dekoratora `@router.post('/')`
+| Element                         | Objašnjenje                                                                              |
+|---------------------------------|------------------------------------------------------------------------------------------|
+| `@router.post("/")`             | Registruje **POST** rutu na `/authors`.                                                  |
+| `name="Create new author"`      | Naziv rute koji se prikazuje u OpenAPI (Swagger)                                         |
+| `summary="Create a new author"` | Kratak opis rute - pojavljuje se kao naslov u Swagger web interfejsu                     |
+| `description="""..."""`         | Detaljan opis zahteva - objašnjava koji podaci se očekuju i kako se validiraju           |
+| `response_model=SchemaAuthor`   | Vraća podatke u obliku šeme `SchemaAuthor` – automatski validiran i dokumentovan odgovor |
+| `status_code=201`               | HTTP status kod za uspešno kreiranje resursa                                             |
+| `Depends(get_service)`          | Ubacuje instancu `ServiceAuthor` pomoću **dependency injection** sistema.                |
+| `Body(openapi_examples=...)`    | Definiše telo zahteva i uključuje primere za Swagger                                     |
+| `responses={...}`               | Dokumentuje sve moguće odgovore sa opisima i primerima.                                  |
 
 ## 🔒 Zaključak
 FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 
