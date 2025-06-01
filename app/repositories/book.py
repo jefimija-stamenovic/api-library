@@ -61,5 +61,4 @@ class RepositoryBook:
                 Book.available == available if available is not None  else expression.true(), 
                 Book.publication_date == publication_date if publication_date is not None else expression.true()
             )
-        print("availability => ", available)
         return query.all()

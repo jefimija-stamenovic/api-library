@@ -41,7 +41,7 @@ U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom.
   - [Pydantic šeme](#pydantic-šeme)
   - [Data Access Layer (app\\repositories)](#data-access-layer-apprepositories)
   - [Business Layer =\> services](#business-layer--services)
-  - [User Interface Layer =\> api](#user-interface-layer--api)
+  - [User Interface Layer =\> app\\api](#user-interface-layer--appapi)
   - [🔒 Zaključak](#-zaključak)
   - [📚 Literatura](#-literatura)
 
@@ -420,7 +420,6 @@ class RepositoryBook:
                 Book.available == available if available is not None  else expression.true(), 
                 Book.publication_date == publication_date if publication_date is not None else expression.true()
             )
-        print("availability => ", available)
         return query.all()
 ```
 | Metoda                                 | Opis                                                                                   |
@@ -432,8 +431,374 @@ class RepositoryBook:
 | `delete(self, book_id: int) -> bool` | Briše knjigu koja ima prosleđeni ID |
 
 ## Business Layer => services 
+Servisi služe za implementiranje poslovne logike, a ujedno su posrednici između kontrolera(rutera) i repozitorijuma. U okviru ovog sloja se obavlja sva poslovna logika poput provere i pripreme podataka pre nego što se proslede DAL sloju. 
+BL sloj obezbeđuju da kontroleri ne brinu o detaljima baze, dok se repozitorijumi koriste isključivo za CRUD operacije bez pisanja dodatne logike.  
 
-## User Interface Layer => api 
+Dat je primer servisa **ServiceBook** u kom je implementirana logika upravljanja knjigama: 
+
+```python 
+from app.core.classes import *
+from app.repositories.book import RepositoryBook
+from app.schemas.book import *
+from app.models.book import Book
+from typing import Any, List, Optional, Dict
+
+class ServiceBook: 
+    _repository : RepositoryBook
+    def __init__(self) -> None:
+        self._repository = RepositoryBook() 
+
+    def find_by_id(self, book_id: int) -> SchemaBook: 
+        founded_book: Book = self._repository.find_by_id(book_id)
+        if not founded_book:
+            raise ExceptionNotFound
+        return SchemaBook.model_validate(founded_book)
+    
+    def create(self, new_author: SchemaBookBase) -> SchemaBook:
+        founded_book: Book = self._repository.find_by_title(new_author.title)
+        if founded_book:
+            raise ExceptionConflict()
+        model_book : Book = Book(**new_author.model_dump())
+        return SchemaBook.model_validate(self._repository.create(model_book))
+    
+    def delete(self, book_id: int) -> SchemaBook: 
+        founded_book: Optional[SchemaBook] = self.find_by_id(book_id)
+        return SchemaBook.model_validate(self._repository.delete(book_id))
+    
+    def update(self, book_id: int, updated_book: SchemaBookUpdate) -> SchemaBook: 
+        founded_book: Optional[SchemaBook] = self.find_by_id(book_id)
+        dict_book: Dict[str, Any] = updated_book.model_dump(exclude_unset=True)
+        return SchemaBook.model_validate(self._repository.update(book_id, dict_book))
+
+    def search(self, search: Optional[str] = None, available: Optional[bool] = None, 
+               author_id: Optional[int] = None, publication_date: Optional[date] = None) -> List[SchemaBook]:
+        books: List[Book] = self._repository.search(search, available, author_id, publication_date)
+        return [SchemaBook.model_validate(book) for book in books]
+```
+## User Interface Layer => app\api 
+UI sloj predstavlja ulaznu tačku za sve zahteve koji dolaze preko HTTP protokola. Router koristi dekoratore `@router.get()`, `@router.post()` i dr. za definisanje ruta tj. putanja i mapira ih na funkcije koje obrađuju te zahteve. 
+
+Naredna sekcija koda prikazuje implementaciju kontrolera za upravljanje knjigama: 
+
+```python
+from fastapi import APIRouter, Depends, Path, status, HTTPException, Query, Body
+from typing import List, Optional
+from app.schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
+from app.services.author import ServiceAuthor, get_service
+from app.core.classes import *
+from app.api.examples.author import *
+
+router: APIRouter = APIRouter(
+    prefix = "/authors", 
+    tags = ["Authors"]
+)
+
+@router.post(path = "/", name = "Create new author", summary="Create a new author", 
+        description="""This endpoint creates a new author. In body, you have to send data object which  
+                        contains first name, last name and optionally a biography of author. 
+                        First name and last name contain only letters, spaces or hyphens and length must
+                        be between 2 and 50 characters
+                    """, 
+    response_model=SchemaAuthor, response_description="This endpoint returns the created author", status_code=status.HTTP_201_CREATED, 
+    responses={
+        status.HTTP_201_CREATED: {
+            "description": "Successfully created author",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": 1,                            
+                        "first_name": "Ivo",
+                        "last_name": "Andrić",
+                        "biography": "Dobitnik Nobelove nagrade", 
+                        "books" : []
+                    }
+                }
+            }
+        },
+        status.HTTP_409_CONFLICT: {
+            "description": "Author already exists",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Author with this name already exists."
+                    }
+                }
+            }
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "description": "Validation error in the submitted data",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": [
+                            {
+                                "loc": ["body", "email"],
+                                "msg": "value is not a valid email address",
+                                "type": "value_error.email"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "description": "An unexpected error occurred on the server",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Internal Server Error. Please try again later."
+                    }
+                }
+            }
+        }
+    }
+)
+def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_create), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
+    try:
+        return service.create(new_author)
+    except ExceptionConflict as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Author with this name already exists.")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+                            detail=str(e))
+
+@router.get("/{author_id: int}", name="Get author by ID", summary="Retrieve author by ID",
+    description="This endpoint retrieves the details of a specific author by their unique ID.",
+    response_model=SchemaAuthor, response_description="Successfully retrieved author data.", status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Author successfully retrieved.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": 1,
+                        "first_name": "Ivo",
+                        "last_name": "Andrić",
+                        "biography": "Dobitnik Nobelove nagrade", 
+                        "books" : []
+                    }
+                }
+            }
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Author not found.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Author with provided ID does not exist."
+                    }
+                }
+            }
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "description": "Invalid ID format.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": [
+                            {
+                                "loc": ["path", "author_id"],
+                                "msg": "value is not a valid integer",
+                                "type": "type_error.integer"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "description": "Unexpected server error.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Internal Server Error. Please try again later."
+                    }
+                }
+            }
+        }
+    }
+)
+def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
+    try:
+        return service.find_by_id(author_id)
+    except ExceptionNotFound as e: 
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Author with provided ID = {author_id} does not exist."
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+@router.put("/{author_id}", name = "Update author by ID", summary = "Update author data providing ID", 
+    description="This endpoint updates an author's data based on the provided ID ", 
+    response_model=SchemaAuthor, status_code=status.HTTP_200_OK, 
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Successfully created author",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": 1,                            
+                        "first_name": "Ivo",
+                        "last_name": "Andrić",
+                        "biography": "Dobitnik Nobelove nagrade", 
+                        "books" : []
+                    }
+                }
+            }
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Author based on the provided ID was not found.",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Author with provided ID does not exist."}
+                }
+            }
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "description": "Invalid input data.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": [
+                            {
+                                "loc": ["body", "first_name"],
+                                "msg": "field required",
+                                "type": "value_error.missing"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "description": "Unexpected server error.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Internal Server Error. Please try again later."
+                    }
+                }
+            }
+        }
+    }
+)
+def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openapi_examples=example_update), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
+    try:
+        return service.update(author_id, updated_data)
+    except ExceptionNotFound as e: 
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Author with provided ID = {author_id} does not exist."
+        )
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+ 
+@router.delete(
+    "/{author_id: int}", name = "Delete author by ID", 
+    summary = "Delete an author by provided ID", description="This endpoint deletes an author by ID from the database", 
+    status_code=status.HTTP_200_OK, response_model=SchemaAuthor, 
+    responses = {
+        status.HTTP_200_OK: {
+            "description": "Successfully deleted author",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": 1,                            
+                        "first_name": "Ivo",
+                        "last_name": "Andrić",
+                        "biography": "Dobitnik Nobelove nagrade", 
+                        "books" : []
+                    }
+                }
+            }
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Author not found.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Author with provided ID does not exist."
+                    }
+                }
+            }
+        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "description": "Unexpected server error.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Internal Server Error. Please try again later."
+                    }
+                }
+            }
+        }
+    }
+)
+def delete_author(
+    author_id: int, 
+    service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor: 
+    try:
+        return service.delete(author_id)
+    except ExceptionNotFound as e: 
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Author with provided ID = {author_id} does not exist."
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+    
+
+@router.get("/search", name="Search authors", summary="Search authors with optional filter critera",
+    description=(
+        "This endpoints returns a list of authors that match the given filter criteria. "
+        "Query param search is optional which means if is not provided, all authors will be returned. "
+        "Search filter include: first name, last name, and partial match on biography."
+    ),
+    response_model=List[SchemaAuthor], response_description="List of authors matching the filters.", status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Authors retrieved successfully.",
+            "content": {
+                "application/json": {
+                    "example": [
+                        {
+                            "id": 1,
+                            "first_name": "Ivo",
+                            "last_name": "Andrić",
+                            "biography": "Dobitnik Nobelove nagrade"
+                        }
+                    ]
+                }
+            }
+        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "description": "Unexpected server error.",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Internal Server Error. Please try again later."}
+                }
+            }
+        }
+    }
+)
+def search_authors(
+    search: Optional[str] = Query(None, description="Filter by author's first name or last name or biography"),
+    service: ServiceAuthor = Depends(get_service)) -> List[SchemaAuthor]:
+    try:
+        return service.search(search)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error. Please try again later."
+        )
+```
 
 ## 🔒 Zaključak
 FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 
