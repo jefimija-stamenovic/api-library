@@ -11,9 +11,9 @@ from typing import Optional
 Base = declarative_base()
 
 class Database:
-    _engine: Engine
-    _db_url: URL
-    _sessionmaker: sessionmaker
+    _engine: Optional[Engine] = None
+    _db_url: Optional[URL] = None
+    _sessionmaker: Optional[sessionmaker] = None
 
     @classmethod
     def init(cls, settings: Settings) -> None:
@@ -24,7 +24,7 @@ class Database:
             username=settings.DB_USER,
             password=settings.DB_PASSWORD
         )
-        tmp_engine = create_engine(tmp_db_url)
+        tmp_engine: Engine = create_engine(tmp_db_url)
         try:
             with tmp_engine.connect() as conn:
                 conn.execute(text(f"CREATE DATABASE IF NOT EXISTS {settings.DB_NAME}"))
@@ -44,6 +44,7 @@ class Database:
         )
         cls._engine = create_engine(cls._db_url)
         cls._sessionmaker = sessionmaker(bind=cls._engine, autocommit=False, autoflush=False)
+        print("LOG ** => 🔧 Engine & sessionmaker are initialized!")
         cls.__auto_migrate()
 
     @classmethod

@@ -16,11 +16,15 @@ class RepositoryAuthor:
         self._session.refresh(new_author)
         return new_author
 
-    def get_by_id(self, author_id: int) -> Optional[Author]:
+    def find_by_id(self, author_id: int) -> Optional[Author]:
         return self._session.query(Author).filter(Author.id == author_id).first()
+    
+    def find_by_name(self, first_name: str, last_name: str) -> Optional[Author]:
+        return self._session.query(Author).filter(Author.first_name == first_name, 
+                                                  Author.last_name == last_name).first()
 
     def update(self, author_id: int, updated_author: Author) -> bool:
-        author: Optional[Author] = self.get_by_id(author_id)
+        author: Optional[Author] = self.find_by_id(author_id)
         if not author:
             return False
         for key, value in updated_author.model_dump().items():
@@ -30,7 +34,7 @@ class RepositoryAuthor:
         return True
 
     def delete(self, author_id: int) -> bool:
-        author: Optional[Author] = self.get_by_id(author_id)
+        author: Optional[Author] = self.find_by_id(author_id)
         if not author:
             return False
         self._session.delete(author)

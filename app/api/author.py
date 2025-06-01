@@ -1,28 +1,25 @@
-from fastapi import APIRouter, Depends, Path, status, HTTPException, Query
+from fastapi import APIRouter, Depends, Path, status, HTTPException, Query, Body
 from typing import List, Optional
 from app.schemas.author import SchemaAuthorBase, SchemaAuthor
 from app.services.author import ServiceAuthor, get_service
+from app.core.classes import *
+from app.api.examples.author import *
 
 router: APIRouter = APIRouter(
     prefix = "/authors", 
     tags = ["Authors"]
 )
 
-@router.post(
-    path = "/", 
-    name = "Create new author", 
-    summary="Create a new author", 
-    description="""This endpoint creates a new author. In body, you have to send data object which  
-        contains first name, last name and optionally a biography of author. 
-        First name and last name contain only letters, spaces or hyphens and length must
-        be between 2 and 50 characters
-    """, 
-    response_model=SchemaAuthorBase, 
-    response_description="This endpoint returns the created author", 
-    status_code=status.HTTP_201_CREATED, 
+@router.post(path = "/", name = "Create new author", summary="Create a new author", 
+        description="""This endpoint creates a new author. In body, you have to send data object which  
+                        contains first name, last name and optionally a biography of author. 
+                        First name and last name contain only letters, spaces or hyphens and length must
+                        be between 2 and 50 characters
+                    """, 
+    response_model=SchemaAuthorBase, response_description="This endpoint returns the created author", status_code=status.HTTP_201_CREATED, 
     responses={
         status.HTTP_201_CREATED: {
-            "description": "Uspešno kreiran autor",
+            "description": "Successfully created author",
             "content": {
                 "application/json": {
                     "example": {
@@ -34,8 +31,18 @@ router: APIRouter = APIRouter(
                 }
             }
         },
+        status.HTTP_409_CONFLICT: {
+            "description": "Author already exists",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Author with this name already exists."
+                    }
+                }
+            }
+        },
         status.HTTP_422_UNPROCESSABLE_ENTITY: {
-            "description": "Validation error in the submitted data.",
+            "description": "Validation error in the submitted data",
             "content": {
                 "application/json": {
                     "example": {
@@ -51,7 +58,7 @@ router: APIRouter = APIRouter(
             }
         },
         status.HTTP_500_INTERNAL_SERVER_ERROR: {
-            "description": "An unexpected error occurred on the server.",
+            "description": "An unexpected error occurred on the server",
             "content": {
                 "application/json": {
                     "example": {
@@ -62,9 +69,14 @@ router: APIRouter = APIRouter(
         }
     }
 )
-def create_author():
-    pass 
-
+def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_create), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthorBase:
+    try:
+        return service.create(new_author)
+    except ExceptionConflict as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+                            detail=str(e))
 
 @router.get(
     "/{author_id}",
@@ -128,7 +140,7 @@ def create_author():
 )
 def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
     try:
-        author: SchemaAuthorBase = service.get_by_id(author_id)
+        author: SchemaAuthorBase = service.find_by_id(author_id)
         if not author:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -277,7 +289,7 @@ def delete_author(
     }
 )
 def search_authors(
-    search: Optional[str] = Query(None, description="Filter by author's first name or last_name or biography"),
+    search: Optional[str] = Query(None, description="Filter by author's first name or last name or biography"),
     service: ServiceAuthor = Depends(get_service)
 ) -> List[SchemaAuthor]:
     try:

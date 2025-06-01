@@ -2,18 +2,22 @@ from app.schemas.author import SchemaAuthorBase, SchemaAuthor
 from app.models.author import Author
 from app.repositories.author import RepositoryAuthor
 from typing import Any, List, Optional
+from app.core.classes import *
 
 class ServiceAuthor: 
     _repository : RepositoryAuthor
     def __init__(self):
         self._repository = RepositoryAuthor() 
 
-    def get_by_id(self, id: int) -> SchemaAuthor: 
-        return SchemaAuthor.model_validate(self._repository.get_by_id(id)) 
+    def find_by_id(self, id: int) -> SchemaAuthor: 
+        return SchemaAuthor.model_validate(self._repository.find_by_id(id)) 
     
     def create(self, new_author: SchemaAuthorBase) -> SchemaAuthor:
-        model_author: Author = Author(**new_author.model_dump())
-        return SchemaAuthor.model_validate(self._repository.create(model_author)) 
+        founded_author: Author = self._repository.find_by_name(first_name=new_author.first_name, last_name=new_author.last_name)
+        if founded_author:
+            raise ExceptionConflict("Author with this name already exists.")
+        model_author : Author = Author(**new_author.model_dump())
+        return SchemaAuthor.model_validate(self._repository.create(model_author))
     
     def delete(self, id: int) -> SchemaAuthor: 
         return SchemaAuthor.model_validate(self._repository.delete(id))

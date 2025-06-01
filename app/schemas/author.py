@@ -3,9 +3,9 @@ from typing import Optional
 import re
 
 class SchemaAuthorBase(BaseModel):
-    first_name : str = Field(..., min_length=2, max_length=50)
-    last_name: str = Field(..., min_length=2, max_length=50)
-    biography: Optional[str] = Field()
+    first_name : str = Field(min_length=2, max_length=50)
+    last_name: str = Field(min_length=2, max_length=50)
+    biography: Optional[str] = Field(default=None)
 
     @field_validator("first_name", "last_name")
     def validate_name(cls, value: str) -> str:
@@ -17,4 +17,4 @@ class SchemaAuthorBase(BaseModel):
     model_config: ConfigDict = ConfigDict(from_attributes=True)
 
 class SchemaAuthor(SchemaAuthorBase): 
-    id: str = Field(...)
+    id: int = Field()

@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text 
+from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy.orm import relationship
 from app.core.db import Base 
 
 class Author(Base) :
@@ -8,3 +9,5 @@ class Author(Base) :
     first_name = Column(String(50), nullable=False, index=True)
     last_name = Column(String(50), nullable=False, index=True)
     biography = Column(Text, nullable=True)
+
+    books = relationship("Book", back_populates="author")
