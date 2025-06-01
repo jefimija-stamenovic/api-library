@@ -241,7 +241,7 @@ def delete_author(
 @router.get(
         "/search",
     name="Search authors",
-    summary="Search authors with optional filters",
+    summary="Search authors with optional filter critera",
     description=(
         "This endpoints returns a list of authors that match the given filter criteria. "
         "Query param search is optional which means if is not provided, all authors will be returned. "
