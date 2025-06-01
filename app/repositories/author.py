@@ -35,7 +35,7 @@ class RepositoryAuthor:
         return updated_author
     
     def delete(self, author_id: int) -> Author:
-        author: Optional[Author] = self.find_by_id(author_id)
+        author: Author = self.find_by_id(author_id)
         self._session.delete(author)
         self._session.commit()
         return author

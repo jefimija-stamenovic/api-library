@@ -38,13 +38,12 @@ example_create : Dict[str, Example] = {
 
 example_update: Dict[str, Example] = {
     "Example 1 - Changed title": {
-        "summary": "Ažuriranje naslova",
+        "summary": "Ažuriranje više podataka",
         "description": "Promena naslova postojeće knjige.",
         "value": {
             "title": "Travnička hronika",
             "isbn": "978-86-519-2222-0",
-            "available": False,
-            "author_id": 1
+            "available": False
         }
     },
     "Example 2 - Changed availability": {

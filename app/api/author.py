@@ -215,7 +215,7 @@ def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openap
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
  
 @router.delete(
-    "/{author_id}", name = "Delete author by ID", 
+    "/{author_id: int}", name = "Delete author by ID", 
     summary = "Delete an author by provided ID", description="This endpoint deletes an author by ID from the database", 
     status_code=status.HTTP_200_OK, response_model=SchemaAuthor, 
     responses = {
@@ -256,7 +256,7 @@ def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openap
     }
 )
 def delete_author(
-    author_id: int = Path(gt=0, description="The ID of the author for deletion"), 
+    author_id: int, 
     service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor: 
     try:
         return service.delete(author_id)

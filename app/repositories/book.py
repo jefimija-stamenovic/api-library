@@ -1,8 +1,10 @@
+from datetime import date
 from typing import Optional, List
 from sqlalchemy import or_, func
 from sqlalchemy.sql import expression
 from sqlalchemy.orm import Session, Query
 from app.models.book import Book
+from app.models.author import Author
 from app.core.db import Database
 
 class RepositoryBook:
@@ -18,35 +20,46 @@ class RepositoryBook:
 
     def find_by_id(self, book_id: int) -> Optional[Book]:
         return self._session.query(Book).filter(Book.id == book_id).first()
+    
+    def find_by_title(self, title: str) -> Optional[Book]:
+        return self._session.query(Book).filter(Book.title == title).first()
 
-    def update(self, book_id: int, updated_book: Book) -> bool:
-        book = self._session.query(Book).filter(Book.id == book_id).first()
-        if not book:
-            return False
-        for key, value in updated_book.model_dump().items():
-            setattr(book, key, value)
+    def update(self, author_id, updated_data: dict) -> Book:
+        updated_book: Book = self.find_by_id(author_id)
+        print(updated_book)
+        for attr, value in updated_data.items(): 
+            if attr == 'id': 
+                continue
+            setattr(updated_book, attr, value)
+
         self._session.commit()
-        return True
+        self._session.refresh(updated_book)
+        return updated_book
 
     def delete(self, book_id: int) -> bool:
-        book = self._session.query(Book).filter(Book.id == book_id).first()
-        if not book:
-            return False
+        book: Book = self.find_by_id(book_id)
         self._session.delete(book)
         self._session.commit()
-        return True
+        return book
 
-    def search(self, search: Optional[str] = None, available: Optional[bool] = None) -> List[Book]:
-        query: Query[Book] = self._session.query(Book)
+    def search(self, search: Optional[str] = None, available: Optional[bool] = None, author_id: Optional[int] = None,  
+               publication_date: Optional[date] = None) -> List[Book]:
+        query: Query[Book] = self._session.query(Book).join(Book.author)
         if search:
             param_search: str = f"%{search.lower()}%"
             query = query.filter(
                 or_(
                     func.lower(Book.title).like(param_search),
                     func.lower(Book.isbn).like(param_search),
-                    func.lower(Book.author).like(param_search)
-                ), 
-                Book.available == available if available else expression.true(), 
+                    func.lower(Book.author).like(param_search), 
+                    func.lower(Author.first_name).like(param_search),
+                    func.lower(Author.last_name).like(param_search),
+                )
             )
-
+        query = query.filter(
+                Book.author_id == author_id if author_id is not None else expression.true(), 
+                Book.available == available if available is not None  else expression.true(), 
+                Book.publication_date == publication_date if publication_date is not None else expression.true()
+            )
+        print("availability => ", available)
         return query.all()
