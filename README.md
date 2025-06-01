@@ -313,7 +313,7 @@ Primer jedne Pydantic šeme:
 
     model_config = ConfigDict(from_attributes=True)
 ```
-**SchemaBookCreate** je DTO za kreiranje knjige i ima određena polja. Svako polje u klasi ima neke uslove - naslov ne sme biti prazan, isbn mora da ima između 10 i 20 karaktera, dok autor mora biti pozitivan ceo broj. 
+**SchemaBookCreate** je DTO za kreiranje knjige i ima određena polja. Svako polje u klasi ima neke uslove - naslov ne sme biti prazan, isbn mora biti dužine između 10 i 20 karaktera, dok ID autor mora biti pozitivan ceo broj. 
 
 > [!NOTE]
 > Moguće je direktno konvertovanje ORM modela u Pydantic šeme:  

@@ -1,8 +1,8 @@
-from pydantic import BaseModel, field_validator, Field
+from pydantic import BaseModel, field_validator, Field, ConfigDict
 from typing import Optional
 import re
 
-class AuthorCreate(BaseModel):
+class SchemaAuthorBase(BaseModel):
     first_name : str = Field(..., min_length=2, max_length=50)
     last_name: str = Field(..., min_length=2, max_length=50)
     biography: Optional[str] = Field()
@@ -13,3 +13,8 @@ class AuthorCreate(BaseModel):
         if not re.match(pattern, value):
             raise ValueError("Name must contain only letters, spaces, or hyphens.")
         return value
+    
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
+class SchemaAuthor(SchemaAuthorBase): 
+    id: str = Field(...)

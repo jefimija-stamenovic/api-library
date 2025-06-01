@@ -1,16 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from app.schemas.user import SchemaUserRegister
 from app.services.user import ServiceUser, get_service
 router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
 
 @router.post(
-    "/register", 
-    name="Register new user", 
-    summary="Endpoint for registration", 
-    description=""" This endpoint registers a new user. In body, you have to send user data which 
-                    contains first name, last name, email, username, password and flag for admin.
-                    Username and email must be unique and password must pass the some checks. """,
-    response_description="", 
+    path = "/register", 
+    name="Registration", 
+    summary="Register a new user", 
+    description="""This endpoint registers a new user. In body, you have to send user data which 
+                contains first name, last name, email, username, password and flag for admin.
+                Username and email must be unique and password must pass the some checks. """,
+    response_description="This endpoint returns the created user", 
     response_model=SchemaUserRegister, 
     status_code=status.HTTP_201_CREATED, 
     responses={

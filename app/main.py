@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.auth import router as router_user
+from app.api.author import router as router_author 
+from app.core.db import Database
+
+import uvicorn
 
 app = FastAPI(
     title="Library API",
@@ -40,11 +44,8 @@ def welcome_route() -> dict[str, str]:
     }
 
 app.include_router(router_user)
-if __name__ == "__main__": 
-    import uvicorn
-    from app.core.db import Database
-    
+app.include_router(router_author)
 
-    
-    db : Database = Database(settings=settings)
+if __name__ == "__main__":
+    Database.init(settings)
     uvicorn.run("app.main:app", host=settings.APP_HOST, port=settings.APP_PORT, reload=True)
