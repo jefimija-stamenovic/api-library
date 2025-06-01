@@ -9,8 +9,11 @@ class ServiceAuthor:
     def __init__(self):
         self._repository = RepositoryAuthor() 
 
-    def find_by_id(self, id: int) -> SchemaAuthor: 
-        return SchemaAuthor.model_validate(self._repository.find_by_id(id)) 
+    def find_by_id(self, author_id: int) -> SchemaAuthor: 
+        founded_author: Author = self._repository.find_by_id(author_id)
+        if not founded_author:
+            raise ExceptionNotFound
+        return SchemaAuthor.model_validate(founded_author)
     
     def create(self, new_author: SchemaAuthorBase) -> SchemaAuthor:
         founded_author: Author = self._repository.find_by_name(first_name=new_author.first_name, last_name=new_author.last_name)

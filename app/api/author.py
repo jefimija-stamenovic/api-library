@@ -83,7 +83,7 @@ def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_c
     name="Get author by ID",
     summary="Retrieve author by ID",
     description="This endpoint retrieves the details of a specific author by their unique ID.",
-    response_model=SchemaAuthorBase,
+    response_model=SchemaAuthor,
     response_description="Successfully retrieved author data.",
     status_code=status.HTTP_200_OK,
     responses={
@@ -140,17 +140,16 @@ def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_c
 )
 def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
     try:
-        author: SchemaAuthorBase = service.find_by_id(author_id)
-        if not author:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Author with provided ID does not exist."
-            )
-        return author
-    except Exception:
+        return service.find_by_id(author_id)
+    except ExceptionNotFound as e: 
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Author with provided ID = {author_id} does not exist."
+        )
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal Server Error. Please try again later."
+            detail=str(e)
         )
 
 @router.put(
