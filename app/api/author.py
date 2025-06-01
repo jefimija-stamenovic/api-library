@@ -267,7 +267,7 @@ def delete_author(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Author with provided ID = {author_id} does not exist."
         )
-    except Exception:
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
