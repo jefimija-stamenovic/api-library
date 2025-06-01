@@ -16,7 +16,7 @@ class RepositoryBook:
             self._session.refresh(new_book)
             return new_book
 
-    def get_by_id(self, book_id: int) -> Optional[Book]:
+    def find_by_id(self, book_id: int) -> Optional[Book]:
         return self._session.query(Book).filter(Book.id == book_id).first()
 
     def update(self, book_id: int, updated_book: Book) -> bool:

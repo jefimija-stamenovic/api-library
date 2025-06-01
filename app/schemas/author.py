@@ -17,6 +17,8 @@ class SchemaAuthorBase(BaseModel):
     
     model_config: ConfigDict = ConfigDict(from_attributes=True)
 
-class SchemaAuthor(SchemaAuthorBase): 
-    id: int = Field()
-    books: List[SchemaBook] = Field(default_factory=List)
+class SchemaAuthorUpdate(SchemaAuthorBase): 
+    books: List[SchemaBook] = Field(default_factory=list)
+
+class SchemaAuthor(SchemaAuthorUpdate): 
+    id: int = Field(gt=0)

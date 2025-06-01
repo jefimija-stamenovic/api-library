@@ -1,13 +1,18 @@
-from app.schemas.author import SchemaAuthorBase, SchemaAuthor
+from app.models.book import Book
+from app.schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
 from app.models.author import Author
 from app.repositories.author import RepositoryAuthor
-from typing import Any, List, Optional
+from app.services.book import ServiceBook
+
+from typing import Any, List, Optional, Dict
 from app.core.classes import *
 
 class ServiceAuthor: 
     _repository : RepositoryAuthor
-    def __init__(self):
+    _service_book : ServiceBook
+    def __init__(self) -> None:
         self._repository = RepositoryAuthor() 
+        self._service_book = ServiceBook()
 
     def find_by_id(self, author_id: int) -> SchemaAuthor: 
         founded_author: Author = self._repository.find_by_id(author_id)
@@ -25,12 +30,17 @@ class ServiceAuthor:
     def delete(self, id: int) -> SchemaAuthor: 
         return SchemaAuthor.model_validate(self._repository.delete(id))
     
-    def update(self, id: int, updated_author: SchemaAuthorBase) -> SchemaAuthor: 
-        dict_author: dict[str, Any] =updated_author.model_dump()
-        dict_author["id"] = id
-        model_author: Author = Author(**dict_author)
-        
-        return SchemaAuthor.model_validate(self._repository.update(id, model_author))
+    def update(self, author_id: int, updated_author: SchemaAuthorUpdate) -> SchemaAuthor: 
+        founded_author: Optional[Author] = self._repository.find_by_id(author_id)
+        if not founded_author: 
+            raise ExceptionNotFound
+        dict_author: Dict[str, Any] = updated_author.model_dump(exclude_unset=True)
+
+        """if updated_author.books:
+            for updated_book in updated_author.books:
+                self._service_book.update(updated_book.id, updated_book)
+        """       
+        return SchemaAuthor.model_validate(self._repository.update(author_id, dict_author))
 
     def search(self, search: Optional[str]) -> List[SchemaAuthor]: 
         authors: List[Author] = self._repository.search(search)

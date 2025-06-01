@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Path, status, HTTPException, Query, Body
 from typing import List, Optional
-from app.schemas.author import SchemaAuthorBase, SchemaAuthor
+from app.schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
 from app.services.author import ServiceAuthor, get_service
 from app.core.classes import *
 from app.api.examples.author import *
@@ -26,7 +26,8 @@ router: APIRouter = APIRouter(
                         "id": 1,                            
                         "first_name": "Ivo",
                         "last_name": "Andrić",
-                        "biography": "Dobitnik Nobelove nagrade"
+                        "biography": "Dobitnik Nobelove nagrade", 
+                        "books" : []
                     }
                 }
             }
@@ -78,14 +79,9 @@ def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_c
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
                             detail=str(e))
 
-@router.get(
-    "/{author_id}",
-    name="Get author by ID",
-    summary="Retrieve author by ID",
+@router.get("/{author_id}", name="Get author by ID", summary="Retrieve author by ID",
     description="This endpoint retrieves the details of a specific author by their unique ID.",
-    response_model=SchemaAuthor,
-    response_description="Successfully retrieved author data.",
-    status_code=status.HTTP_200_OK,
+    response_model=SchemaAuthor, response_description="Successfully retrieved author data.", status_code=status.HTTP_200_OK,
     responses={
         status.HTTP_200_OK: {
             "description": "Author successfully retrieved.",
@@ -152,14 +148,23 @@ def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service
             detail=str(e)
         )
 
-@router.put(
-    "/{author_id}", 
-    name = "Update author by ID", 
-    summary = "Update author data providing ID", 
+@router.put("/{author_id}", name = "Update author by ID", summary = "Update author data providing ID", 
     description="This endpoint updates an author's data based on the provided ID ", 
-    status_code=status.HTTP_204_NO_CONTENT, 
+    response_model=SchemaAuthor, status_code=status.HTTP_200_OK, 
     responses={
-        status.HTTP_204_NO_CONTENT: {
+        status.HTTP_201_CREATED: {
+            "description": "Successfully created author",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": 1,                            
+                        "first_name": "Ivo",
+                        "last_name": "Andrić",
+                        "biography": "Dobitnik Nobelove nagrade", 
+                        "books" : []
+                    }
+                }
+            }
         },
         status.HTTP_404_NOT_FOUND: {
             "description": "Author based on the provided ID was not found.",
@@ -197,9 +202,14 @@ def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service
         }
     }
 )
-def update_author(author_id: int, updated_author: SchemaAuthor) -> None: 
-    pass 
-
+def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openapi_examples=example_update), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
+    try:
+        return service.update(author_id, updated_data)
+    except ExceptionConflict as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+ 
 @router.delete(
     "/{author_id}", 
     name = "Delete author by ID", 
@@ -249,18 +259,13 @@ def delete_author(
         )
     
 
-@router.get(
-        "/search",
-    name="Search authors",
-    summary="Search authors with optional filter critera",
+@router.get("/search", name="Search authors", summary="Search authors with optional filter critera",
     description=(
         "This endpoints returns a list of authors that match the given filter criteria. "
         "Query param search is optional which means if is not provided, all authors will be returned. "
         "Search filter include: first name, last name, and partial match on biography."
     ),
-    response_model=List[SchemaAuthor],
-    response_description="List of authors matching the filters.",
-    status_code=status.HTTP_200_OK,
+    response_model=List[SchemaAuthor], response_description="List of authors matching the filters.", status_code=status.HTTP_200_OK,
     responses={
         status.HTTP_200_OK: {
             "description": "Authors retrieved successfully.",
