@@ -23,7 +23,7 @@ class ServiceAuthor:
     def create(self, new_author: SchemaAuthorBase) -> SchemaAuthor:
         founded_author: Author = self._repository.find_by_name(first_name=new_author.first_name, last_name=new_author.last_name)
         if founded_author:
-            raise ExceptionConflict("Author with this name already exists.")
+            raise ExceptionConflict()
         model_author : Author = Author(**new_author.model_dump())
         return SchemaAuthor.model_validate(self._repository.create(model_author))
     

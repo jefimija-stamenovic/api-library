@@ -74,7 +74,7 @@ def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_c
     try:
         return service.create(new_author)
     except ExceptionConflict as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Author with this name already exists.")
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
                             detail=str(e))
@@ -211,8 +211,6 @@ def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openap
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Author with provided ID = {author_id} does not exist."
         )
-    except ExceptionConflict as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
  
