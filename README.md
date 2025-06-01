@@ -151,21 +151,51 @@ Ovaj projekat se nalazi na *Github*-u, pa je prvi korak ka pokretanju projekta n
 Nakon kloniranja projekta, klonirani projekat bi trebalo da ima sledeću strukturu: 
 
 ```
-  api-library/
-  ├── app/
-  │   ├── api/           # UI => rute
-  │   ├── services/      # BL => servisi sa poslovnom logikom
-  │   ├── repositories/  # DAL => rad sa bazom podataka
-  │   ├── models/        # SQLAlchemy modeli
-  │   ├── schemas/       # Pydantic šeme
-  │   ├── core/          # Učitavanje konfiguracija, pomoćne funkcije i sl.  
-  │   └── main.py        # Glavni fajl
-  ├── requirements.txt   # Potrebne biblioteke 
-  ├── .env               # Podešavanje okruženja
-  │   ├── prod.env       # Podešavanja za produkciono okruženje 
-  │   └── dev.env        # Podešavanja za razvojno okruženje 
-  ├── alembic.ini
-  └── README.md
+api-library/
+├── app/
+│   ├── api/                        # UI sloj 
+│   │   ├── book.py
+│   │   ├── author.py
+│   │   └── user.py
+│   │
+│   ├── services/                   # BL sloj
+│   │   ├── book.py
+│   │   ├── author.py
+│   │   └── user.py
+│   │
+│   ├── repositories/              # DAL sloj
+│   │   ├── book.py
+│   │   ├── author.py
+│   │   └── user.py
+│   │
+│   ├── models/                    # SQLAlchemy modeli
+│   │   ├── book.py
+│   │   ├── author.py
+│   │   └── user.py
+│   │
+│   ├── schemas/                   # Pydantic šeme
+│   │   ├── book.py
+│   │   ├── author.py
+│   │   └── user.py
+│   │
+│   ├── core/                      # Konfiguracija, povezivanje na bazu, konstante itd.
+│   │   ├── config.py
+│   │   ├── constants.py
+│   │   ├── db.py
+│   │   └── security.py
+│   │
+│   └── main.py                    # Glavni program
+│
+├── alembic/                    # Alembic 
+│   ├── versions/
+│   ├── env.py
+│   └── script.py.mako
+│
+├── alembic.ini                    # Alembic конфигурација
+├── requirements.txt              # Зависности
+├── README.md
+└── .env                          # ENV променљиве (DB info, тајне, итд.)
+
 ```
 
 ### 📦 2. Podešavanje virtuelnog okruženja 

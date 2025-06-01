@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.auth import router as router_user
 from app.api.author import router as router_author 
+from app.api.book import router as router_book
 from app.core.db import Database
 
 import uvicorn
@@ -45,6 +46,7 @@ def welcome_route() -> dict[str, str]:
 
 app.include_router(router_user)
 app.include_router(router_author)
+app.include_router(router_book)
 
 if __name__ == "__main__":
     Database.init(settings)
