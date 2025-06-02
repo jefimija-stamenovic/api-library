@@ -16,8 +16,18 @@ def custom_openapi():
         return app.openapi_schema
     openapi_schema = get_openapi(
         title="Library API",
+        description="Welcome to the **Library API** - a RESTful backend server built with **FastAPI**",
+        summary="Backend API for managing books, users and authors in a digital library.", 
         version="1.0.0",
-        description="API za upravljanje bibliotekom.",
+        contact={
+            "name" : "Jefimija Stamenovic", 
+            "url" : "https://github.com/jefimija-stamenovic", 
+            "email" : "jefimija.stamenovic@gmail.com"
+        },
+        license_info={
+            "name" : "Apache 2.0", 
+            "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
+        }, 
         routes=app.routes,
     )
     openapi_schema["components"]["securitySchemes"] = {
@@ -37,31 +47,16 @@ def create_app() -> FastAPI:
         Database.init(settings)
 
     app = FastAPI(
-        title="Library API",
-        description="Welcome to the ** Library API** - a RESTful backend server built with **FastAPI**",
-        summary="Backend API for managing books, users and authors in a digital library.", 
-        version="1.0.0",
-        contact={
-            "name" : "Jefimija Stamenovic", 
-            "url" : "https://github.com/jefimija-stamenovic", 
-            "email" : "jefimija.stamenovic@gmail.com"
-        },
-        license_info={
-            "name" : "Apache 2.0", 
-            "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
-        }, 
         docs_url="/docs/swagger", 
         redoc_url="/docs/redoc", 
         openapi_url="/openapi.json"
     )
     app.openapi = custom_openapi
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"], 
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    app.add_middleware(CORSMiddleware, 
+                        allow_origins=["*"], 
+                        allow_credentials=True,
+                        allow_methods=["*"],
+                        allow_headers=["*"])
     app.include_router(router)
     app.include_router(router_user)
     app.include_router(router_author)

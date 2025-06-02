@@ -34,25 +34,24 @@ U ovom projektu je prikazana izrada REST API servisa za upravljanje bibliotekom.
     - [Upravljanje okruženjem i konfiguracijom aplikacije](#upravljanje-okruženjem-i-konfiguracijom-aplikacije)
     - [Pokretanje aplikacije](#pokretanje-aplikacije)
   - [📄 Dokumentacija API-ja: Swagger i ReDoc](#-dokumentacija-api-ja-swagger-i-redoc)
-    - [SwaggerUI](#swaggerui)
-    - [ReDoc](#redoc)
+    - [📄SwaggerUI](#swaggerui)
+    - [📄ReDoc](#redoc)
     - [Konfiguracija Swagger i ReDoc dokumentacije](#konfiguracija-swagger-i-redoc-dokumentacije)
-  - [SQLALchemy modeli](#sqlalchemy-modeli)
-  - [Pydantic šeme](#pydantic-šeme)
-  - [Data Access Layer ➡️ `app\repositories`](#data-access-layer-️-apprepositories)
-  - [Business Layer ➡️ `app\services`](#business-layer-️-appservices)
-  - [User Interface Layer ➡️ `app\api`](#user-interface-layer-️-appapi)
+  - [📊SQLALchemy modeli](#sqlalchemy-modeli)
+  - [📝Pydantic šeme](#pydantic-šeme)
+  - [📂Data Access Layer ➡️ `app\repositories`](#data-access-layer-️-apprepositories)
+  - [📂Business Layer ➡️ `app\services`](#business-layer-️-appservices)
+  - [📂User Interface Layer ➡️ `app\api`](#user-interface-layer-️-appapi)
   - [🔒 Zaključak](#-zaključak)
-  - [📚 Literatura](#-literatura)
 
 ## 💡Šta je FastAPI? 
-**FastAPI** je moderan i brz Python web *framework* namenjen brzom i jednostavnom pravljenju REST API servisa. Pruža sve što je potrebno za razvoj savremenih API-ja - od definisanja ruta i obrade podataka, pa do vraćanja odgovora klijentu i rukovanja greškama. 
+**FastAPI** je moderan i brz Python web *framework* namenjen brzom i jednostavnom pravljenju REST API servisa. Pruža sve što je potrebno za razvoj savremenih API-ja - od definisanja ruta i obrade podataka, pa do slanja odgovora klijentu i rukovanja potencijalnim greškama. 
 Razvijen je na osnovu standardnih specifikacija poput OpenAPI-ja i JSON Schema-e. Takođe je baziran i na ASGI standardu, što znači da je moguć asinhroni način rada, odnosno, može da obrađuje više zahteva istovremeno što je značajno za performanse. 
 
 ## ❓ Koji problemi se rešavaju? 
 **FastAPI** je razvijen kao odgovor na konkretne izazove u razvoju savremenih web servisa, gde je poseban akcenat stavljen na brzinu, pouzdanost i jednostavan razvoj. Ključni problemi koje rešava su: 
- - **Manuelna validacija podataka** - uz podršku biblioteke *Pydantic*, omogućena je automatska validacija ulaznih i izlaznih podataka. Time se eliminiše potreba za ručnim pisanjem logike gde se proverava ispravnost podataka, pa samim tim dolazi i do smanjenja koda i smanjenja mogućnosti za nastanak grešaka. 
- - **Nedostatak dokumentacije** - **FastAPI** automatski generiše potpunu i interaktivnu dokumentaciju u grafičkom okruženju koristeći Swagger i ReDoc na osnovu definisanih ruta i tipova. 
+ - **Manuelna validacija podataka** - uz podršku biblioteke *Pydantic*, omogućena je automatska validacija ulaznih i izlaznih podataka. Time se eliminiše potreba za ručnim pisanjem logike gde se proverava ispravnost podataka, pa samim tim dolazi i do smanjenja koda i mogućnosti za nastanak grešaka. 
+ - **Nedostatak dokumentacije** - **FastAPI** automatski generiše potpunu i interaktivnu dokumentaciju  na osnovu definisanih ruta i tipova u grafičkom okruženju koristeći Swagger i ReDoc
  - **Paralelna obrada zahteva** - **FastAPI** pruža podršku za asinhroni rad (*async/await*) što omogućava efikasno korišćenje resursa čak i u aplikacijama koje imaju potrebu za obradu velikog broja istovremenih zahteva
  - **Nedostatak kontrole nad strukturom podataka** - za razliku od nekih drugih tradicionalnih *framework*-ova, **FastAPI** nudi mogućnost eksplicitnog definisanja strukture podataka kroz tipove čime se omogućava automatska validacija i rano otkrivnje grešaka koje bi inače bile uočene tek u produkciji. 
 
@@ -84,10 +83,10 @@ Razvijen je na osnovu standardnih specifikacija poput OpenAPI-ja i JSON Schema-e
 | Sanic         | ✅                       | ❌                    | ❌                    | ❌                |
 | Falcon        | ✅                       | ❌                    | ❌                    | ⚠️ ograničeno     |
 
-- **FastAPI** se izdvaja kao jedini *framework* koji ispunjava sve potrebne ključne kriterijume za razvoj savremenih i pouzdanih API-ja. Nudi mogućnost asinhronog načina rada, validacija podataka i kreiranje dokumentacije je automatizovano i tipizacija podataka je precizna što sve doprinosi brzini razvoja i smanjenju grešaka
-- Iako je Flask izuzetno fleksibilan i jednostavan za korišćenje, on nema ugrađenu podršku za asinhroni način rada i automatsku obradu validacije i kreiranje dokumentacije, pa bi za te funkcionalnosti morale da se koriste dodatne biblioteke
-- Django REST ima pouzdanu i sveobuhvatnu podršku za validaciju i dokumentaciju, ali je asinhroni način rada ograničen i zahteva dodatne korake koji mogu dovesti do usporavanja razvoja, naročito kod aplikacija sa velikim brojem istovremenih zahteva. 
-- Tornado, Sanic i Falcon se fokusiranju na obezbeđivanje brzine i asinhrono procesiranje zahteva, ali nemaju ugrađene mehanizme za automatsku validaciju podataka i dokumentaciju, niti pružaju isti nivo tipske bezbednosti 
+- **FastAPI** se izdvaja kao jedini *framework* koji ispunjava sve ključne kriterijume za razvoj savremenih i pouzdanih API-ja. Nudi mogućnost asinhronog načina rada, validacija podataka i kreiranje dokumentacije je automatizovano i tipizacija podataka je precizna što sve doprinosi brzini razvoja i smanjenju grešaka
+- Iako je **Flask** izuzetno fleksibilan i jednostavan za korišćenje, on nema ugrađenu podršku za asinhroni način rada, kao ni mogućnost automatske validacije i kreiranja dokumentacije, što bi značilo da se za te funkcionalnosti moraju koristiti dodatne biblioteke
+- **Django REST** ima pouzdanu i sveobuhvatnu podršku za validaciju i dokumentaciju, ali je asinhroni način rada ograničen i zahteva dodatne korake koji mogu dovesti do usporavanja razvoja, naročito kod aplikacija sa velikim brojem istovremenih zahteva. 
+- **Tornado, Sanic i Falcon** se fokusiranju na obezbeđivanje brzine i asinhrono procesiranje zahteva, ali nemaju ugrađene mehanizme za automatsku validaciju podataka i dokumentaciju, niti pružaju isti nivo tipske bezbednosti 
 
 ## 🛠️ Ostale korišćene tehnologije u razvoju aplikacije
 
@@ -98,7 +97,7 @@ Razvijen je na osnovu standardnih specifikacija poput OpenAPI-ja i JSON Schema-e
 > Uvicorn je zvanično preporučen server za **FastAPI** aplikacije zbog svoje brzine i podrške za asinhroni rad. S obzirom da minimalno troši resurse, a brzo odgovara na klijentske zahteve, idealan je za upotrebu i u razvojnom i u produkcionom okruženju, posebno ako se radi o sistemima koji zahtevaju visok stepen paralelne obrade podataka. 
 
 ### 🧩 Pydantic
-**Pydantic** je Python biblioteka koja se koristi za definisanje modela podataka i njihovu automatsku proveru. Ova biblioteka omogućava da se na jednom mestu jasno opiše kako neki podatak treba da izgleda - kog je tipa, da li je obavezan i koja mu je podrazumevana vrednost. Kada aplikacija primi HTTP zahtev od strane klijenta, ona koristi Pydantic modele da bi proverila da li su pristigli podaci ispravni. Ukoliko nisu, klijent dobija HTTP odgovor sa statusom 422 i detaljnim objašnjenjem gde je došlo do greške. 
+**Pydantic** je Python biblioteka koja se koristi za definisanje modela podataka i njihovu automatsku proveru. Omogućava da se na jednom mestu jasno opiše kako neki podatak treba da izgleda - kog je tipa, da li je obavezan i koja mu je podrazumevana vrednost. Kada aplikacija primi HTTP zahtev od strane klijenta, ona koristi Pydantic modele da bi proverila da li su pristigli podaci ispravni. Ukoliko nisu, klijent dobija HTTP odgovor sa statusom 422 i detaljnim objašnjenjem gde je došlo do greške. 
 
 > [!IMPORTANT]
 > Jedna od glavnih prednosti Pydantic-a je ta što se isti model može upotrebiti i za validiranje ulaznih podataka i za formatiranje odgovora koji se šalje klijentu. Time se obezbeđuje doslednost u strukturi podataka, ne dolazi do dupliranja logike, a ujedno se pojednostavljuje održavanje i testiranje celokupne aplikacije. 
@@ -123,7 +122,7 @@ Sama aplikacija je organizovana u tri sloja:
 
   2) **BL (business layer) sloj** - sloj poslovne logike predstavlja središnji nivo aplikacione arhitekture jer se nalazi između sloja korisničkog interfejsa i sloja za pristup podacima. Glavni zadatak ovog sloja je da obradi pristigle podatke i implementira pravila kojima se definiše ponašanje sistema. Na primer, u ovom sloju će se obaviti provera ispunjenosti kriterijuma za iznajmljivanje knjiga, da li je knjiga dostupna itd. Sem toga, BL sloj po potrebi transformiše podatke i priprema odgovore koje potom delegira UI sloju.
   
-  3) **DAL (data access layer) sloj** - ovo je sloj za pristup podacima, pa samim tim je zadužen za direktnu komunikaciju sa bazom podataka. U okviru njega se definišu CRUD (create, read, update, delete) operacije tj. operacije za kreiranje, čitanje, ažuriranje i brisanje. DAL sloj predstavlja apstrakciju nad samom bazom podataka što znači da sloj poslovne logike ne mora, a ni ne treba da zna tehničke detalje baze ili samih SQL upita. U ovoj aplikaciji, DAL koristi SQLAlchemy ORM koji omogućava efikasan, a pre svega tipski bezbedan rad sa MySQL bazom podataka. Sve operacije nad entitetima se nalaze u ovom sloju čime se izbegava replikacija koda i pojednostavljuje njegovo održavanje. 
+  3) **DAL (data access layer) sloj** - ovo je sloj za pristup podacima, pa samim tim je zadužen za direktnu komunikaciju sa bazom podataka. U okviru njega se definišu CRUD operacije. DAL sloj predstavlja apstrakciju nad samom bazom podataka što znači da sloj poslovne logike ne mora, a ni ne treba da zna tehničke detalje baze ili samih SQL upita. U ovoj aplikaciji, DAL koristi SQLAlchemy ORM koji omogućava efikasan, a pre svega tipski bezbedan rad sa MySQL bazom podataka. Sve operacije nad entitetima se nalaze u ovom sloju čime se izbegava replikacija koda i pojednostavljuje njegovo održavanje. 
 
 👉 Kratak pregleda funkcija slojeva:  
 | Sloj  | Funkcija                           | Primer u FastAPI-ju                                            |
@@ -227,7 +226,7 @@ python -m venv naziv-virtualnog-okruzenja
 ### Upravljanje okruženjem i konfiguracijom aplikacije
 Česta praksa prilikom razvoja web aplikacija jeste razdvajanje razvojnog (development) i produkcionog (production) okruženja, a razlog za to je njihova različita namena. Razvojno okruženje se koristi kada je potrebno da se testiraju nove funkcionalnosti ili da se otklone uočene nepravilnosti u radu aplikacije, dok je produkciono okruženje namenjeno korisnicima i mora da bude stabilno i pouzdano. Ovakva praksa omogućava programerima da rade bez rizika od narušavanja rada aplikacije u realnom vremenu. Pored toga, oba okruženja uglavnom imaju različite konfiguracione parametre - pristup bazi, logovanje ili bezbedonosna podešavanja što doprinosi fleksibilnosti i sigurnosti u radu. 
 
-U folderu env se nalaze dva fajla prod.env i test.env sa promenljivama koje su potrebne za podešavanje okruženja aplikacije i one mogu da se podešavaju i menjaju u skladu sa potrebama. 
+U folderu `env` se nalaze dva fajla `prod.env` i `test.env` sa promenljivama koje su potrebne za podešavanje okruženja aplikacije i one mogu da se podešavaju i menjaju u skladu sa potrebama. 
 
 ### Pokretanje aplikacije
 U zavisnosti od toga koje okruženje je potrebno, prilikom pokretanja programa se dodaje određeni parametar. Ako je potrebno testno okruženje, onda se pokreće sledećom komandom: 
@@ -244,37 +243,24 @@ Ako je, pak, potrebno produkciono okruženje, onda se dodaje argument --prod
 ## 📄 Dokumentacija API-ja: Swagger i ReDoc 
 U prethodnim poglavljima je rečeno da je jedna od glavnih prednosti FastAPI framework-a ta što ima ugrađenu podršku za automatsko generisanje dokumentacije API-ja koja se oslanja na OpenAPI specifikaciju (ranije poznata i kao Swagger dokumentacija). Ova funkcionalnost FastAPI-ja u mnogome olakšava kako rad programerima, tako i krajnjim korisnicima API-ja jer imaju mogućnost brzog uvida u dostupne rute, parametre i očekivane odgovore. 
 
-### SwaggerUI 
-SwaggerUI interfejsu se pristupa preko rute */docs/swagger*. Ovaj interfejs predstavlja interaktivni web interfejs za pregled i testiranje API-ja bez potrebe za korišćenjem nekih drugih eksternih alata poput Postman-a ili curl-a. 
+### 📄SwaggerUI 
+**SwaggerUI** interfejsu se pristupa preko rute `/docs/swagger`. Ovaj interfejs predstavlja interaktivni web interfejs za pregled i testiranje API-ja bez potrebe za korišćenjem nekih drugih eksternih alata poput Postman-a ili curl-a. 
 
-### ReDoc
-ReDoc je drugi interaktivni web interfejs za pregled i testiranje API-ja koji je dostupan na ruti */docs/redoc*. Sam koncept ReDoc dokumentacije je drugačiji od Swagger-a jer je kod njega akcenat na strukturalno uređenoj i vizuelno čitljivijoj prezentaciji API-ja. Posebno je stavljen akcenat na hijerarhijsku navigaciju i detaljne opise polja i parametrima. ReDoc je često korišćen u produkciji gde je čitanje dokumentacije mnogo bitnije od interaktivnog testiranja. 
+### 📄ReDoc
+**ReDoc** je drugi interaktivni web interfejs za pregled i testiranje API-ja koji je dostupan na ruti `/docs/redoc`. Sam koncept ReDoc dokumentacije je drugačiji od Swagger-a jer je kod njega akcenat na strukturalno uređenoj i vizuelno čitljivijoj prezentaciji API-ja. Posebno je stavljen akcenat na hijerarhijsku navigaciju i detaljne opise polja i parametrima. ReDoc je često korišćen u produkciji gde je čitanje dokumentacije mnogo bitnije od interaktivnog testiranja. 
 
 ### Konfiguracija Swagger i ReDoc dokumentacije
-Konfiguracija oba web interfejsa dokumentacije, tačnije definisanje njihovih ruta na osnovu kojih im se pristupa, se vrši prilikom inicijalizacije FastAPI aplikacije u **main.py** fajlu i to podešavanjem parametara *docs_url* i *redoc_url*: 
+Konfiguracija oba web interfejsa dokumentacije, tačnije definisanje njihovih ruta na osnovu kojih im se pristupa, se vrši prilikom inicijalizacije FastAPI aplikacije u **main.py** fajlu i to podešavanjem parametara `docs_url` i `redoc_url`: 
 
 ```python
-
 app = FastAPI(
-    title="Biblioteka API",
-    description="REST API za upravljanje bibliotekom",
-    version="1.0.0",
-    contact={
-        "name" : "Jefimija Stamenovic", 
-        "url" : "https://github.com/jefimija-stamenovic", 
-        "email" : "jefimija.stamenovic@gmail.com"
-    },
-    license_info={
-        "name" : "Apache 2.0", 
-        "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }, 
     docs_url="/docs/swagger", 
     redoc_url="/docs/redoc", 
     openapi_url="/openapi.json"
 )
 ```
-## SQLALchemy modeli
-U okviru foldera **app/models** se nalaze svi SQLAlchemy modeli potrebni za rad aplikacije. 
+## 📊SQLALchemy modeli
+U okviru foldera `app/models` se nalaze svi SQLAlchemy modeli potrebni za rad aplikacije. 
 Primer SQLAlchemy modela **Book**: 
 ```python
   class Book(Base):
@@ -306,7 +292,7 @@ Primer SQLAlchemy modela **Book**:
 
 
 > [!IMPORTANT]
-> Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika – u fajlu **alembic\env.py** je dodat sledeći kod:
+> Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika – u fajlu `alembic\env.py` je dodat sledeći kod:
 >
 > ```python
 > from app.core.db import Base
@@ -314,7 +300,7 @@ Primer SQLAlchemy modela **Book**:
 > target_metadata = Base.metadata
 > ```
 >
-> dok se u **app/models/base.py** navode svi modeli koji se koriste u aplikaciji:
+> dok se u `app/models/base.py` navode svi modeli koji se koriste u aplikaciji:
 >
 > ```python
 > from models.user import User
@@ -322,9 +308,9 @@ Primer SQLAlchemy modela **Book**:
 > from models.book import Book
 > ```
 >
-> Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl ***alembic\env.py**.
+> Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl `*alembic\env.py`.
 
-## Pydantic šeme
+## 📝Pydantic šeme
 U FastAPI-u se često koriste Pydantic šeme koje se koriste za validiranje i strukturisanje ulaznih i izlaznih podataka. Tehnički, one se ponašaju kao DTO-vi (Data Transfer Objects) tj. kao objekti za prenos podataka na relaciji klijent-aplikacija ili različitih slojeva aplikacije. 
 
 > [!CAUTION]
@@ -376,7 +362,7 @@ class SchemaBookBase(BaseModel):
 > ```
 > Ovo je izuzetno korisno jer omogućava da se ORM objekti dobijeni od DAL sloja automatski pretvore u Pydantic šeme (DTO) bez ručnog mapiranja 
 
-## Data Access Layer ➡️ `app\repositories`
+## 📂Data Access Layer ➡️ `app\repositories`
 Kao što je već rečeno, ovaj sloj je posrednik između baze podataka i poslovne logike aplikacije. U okviru njega se nalaze sve funkcije koje se tiču uzimanja, kreiranja, ažuriranja i brisanja podataka.
 
 U nastavku je dat primer klase **RepositoryBook** koja sadrži metode za rad sa entitom **Book**. 
@@ -445,7 +431,7 @@ class RepositoryBook:
 | `update(self, book_id: int, updated_data: dict) -> Book` | Ažuriranje knjige na osnovu prosleđenog rečnika `updated_data`       |
 | `delete(self, book_id: int) -> bool` | Briše knjigu koja ima prosleđeni ID |
 
-## Business Layer ➡️ `app\services` 
+## 📂Business Layer ➡️ `app\services` 
 Servisi služe za implementiranje poslovne logike, a ujedno su posrednici između kontrolera i repozitorijuma. U okviru servisa se obavlja sva poslovna logika poput provere i pripreme podataka pre nego što se proslede DAL sloju. 
 Servisi obezbeđuju da kontroleri ne brinu o detaljima baze, dok se repozitorijumi koriste isključivo za CRUD operacije bez pisanja dodatne logike.  
 
@@ -484,14 +470,14 @@ class ServiceBook:
         books: List[Book] = self._repository.search(search, available, author_id, publication_date)
         return [SchemaBook.model_validate(book) for book in books]
 ```
-## User Interface Layer ➡️ `app\api` 
+## 📂User Interface Layer ➡️ `app\api` 
 UI sloj predstavlja ulaznu tačku za sve zahteve koji dolaze preko HTTP protokola. Router koristi dekoratore `@router.get()`, `@router.post()` i dr. za definisanje ruta tj. putanja i mapira ih na funkcije koje obrađuju te zahteve. 
 
 Zadaci rutera su:
- - Validiranje ulaza - ruter koristi Pydantic šeme da proveri da li je zahtev ispravno formatiran (Body, Query, Path)
- - Pozivanje servisnog sloja - unutar rutera se poziva metode servisa sa određenim parametrima i logika je prepuštena njemu 
- - Slanje odgovora - ruter šalje odgovarajući HTTP status i telo odgovora (**response_model**)
- - Obrada grešaka - sve greške koje dođu od strane servisa se hvataju i u zavisnosti od greške se kreira određeni **HTTPException** sa status kodom i opisom greške 
+ - **Validiranje ulaza** - ruter koristi Pydantic šeme da proveri da li je zahtev ispravno formatiran (Body, Query, Path)
+ - **Pozivanje servisnog sloja** - unutar rutera se poziva metode servisa sa određenim parametrima i logika je prepuštena njemu 
+ - **Slanje odgovora** - ruter šalje odgovarajući HTTP status i telo odgovora (**response_model**)
+ - **Obrada grešaka** - sve greške koje dođu od strane servisa se hvataju i u zavisnosti od greške se kreira određeni **HTTPException** sa status kodom i opisom greške 
 
 Naredna sekcija koda prikazuje implementaciju kontrolera za upravljanje knjigama: 
 
@@ -830,8 +816,3 @@ Namena: Zadatak ove rute je kreiranje tj. dodavanje novog autora. U nastavku je 
 
 ## 🔒 Zaključak
 FastAPI u kombinaciji sa troslojnom arhitekturom UI-BL-DAL predstavlja brzo, razumljivo i lako održivo rešenje za razvoj REST API-ja. U ovom jednostavnom projektu, kroz praktične primere, je napravljen *backend* za biblioteku koji je lak za nadogradnju, bezbedan za upotrebu i spreman za primenu u stvarnim projektima. 
-
-## 📚 Literatura
-
-https://www.uvicorn.org/#quickstart
-https://alembic.sqlalchemy.org/en/latest/
