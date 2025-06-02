@@ -65,9 +65,7 @@ router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
 )
 def register_user(new_user: SchemaUserRegister, service: ServiceUser = Depends(get_service)) -> SchemaUser: 
     try: 
-        user: SchemaUser = service.register(new_user)
-        print(user)
-        return user
+        return service.register(new_user)
     except ExceptionConflict as e: 
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail = str(e))
     except Exception as e: 

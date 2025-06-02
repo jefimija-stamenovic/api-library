@@ -9,8 +9,27 @@ from api.author import router as router_author
 from api.book import router as router_book
 from api.base import router
 
-
+from fastapi.openapi.utils import get_openapi
 import uvicorn
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Library API",
+        version="1.0.0",
+        description="API za upravljanje bibliotekom.",
+        routes=app.routes,
+    )
+    openapi_schema["components"]["securitySchemes"] = {
+        "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+    }
+    
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
 
 def create_app() -> FastAPI: 
     if not getattr(Database, "_engine", None):
@@ -35,7 +54,7 @@ def create_app() -> FastAPI:
         redoc_url="/docs/redoc", 
         openapi_url="/openapi.json"
     )
-
+    app.openapi = custom_openapi
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"], 

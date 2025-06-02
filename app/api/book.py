@@ -4,8 +4,10 @@ from schemas.book import *
 from services.book import ServiceBook, get_service
 from core.classes import *
 from api.examples.book import *
+from core.security import JWTHelper
 
-router: APIRouter = APIRouter(prefix="/books",tags=["Books"])
+router: APIRouter = APIRouter(prefix="/books",tags=["Books"], 
+                              dependencies= [Depends(JWTHelper.get_current_user)])
 
 @router.post("/", name="Create book", summary="Create a new book",
     response_model=SchemaBook, response_description="Created book data", status_code=status.HTTP_201_CREATED,
@@ -66,7 +68,8 @@ router: APIRouter = APIRouter(prefix="/books",tags=["Books"])
         }
     }
 )
-def create_book(new_book: SchemaBookBase = Body(openapi_examples=example_create), service: ServiceBook = Depends(get_service)) -> SchemaBook:
+def create_book(new_book: SchemaBookBase = Body(openapi_examples=example_create), 
+                service: ServiceBook = Depends(get_service)) -> SchemaBook:
     try:
         return service.create(new_book)
     except ExceptionConflict as e:

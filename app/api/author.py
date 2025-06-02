@@ -4,6 +4,7 @@ from schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
 from services.author import ServiceAuthor, get_service
 from core.classes import *
 from api.examples.author import *
+from core.security import JWTHelper
 
 router: APIRouter = APIRouter(prefix="/authors", tags=["Authors"])
 
@@ -67,7 +68,9 @@ router: APIRouter = APIRouter(prefix="/authors", tags=["Authors"])
         }
     }
 )
-def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_create), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
+def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_create), 
+                  service: ServiceAuthor = Depends(get_service), 
+                  current_user=Depends(JWTHelper.get_current_user)) -> SchemaAuthor:
     try:
         return service.create(new_author)
     except ExceptionConflict as e:
@@ -200,7 +203,10 @@ def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service
         }
     }
 )
-def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openapi_examples=example_update), service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
+def update_author(author_id: int,
+                updated_data: SchemaAuthorUpdate = Body(openapi_examples=example_update), 
+                service: ServiceAuthor = Depends(get_service), 
+                current_user=Depends(JWTHelper.get_current_user)) -> SchemaAuthor:
     try:
         return service.update(author_id, updated_data)
     except ExceptionNotFound as e: 
@@ -252,9 +258,7 @@ def update_author(author_id: int, updated_data: SchemaAuthorUpdate = Body(openap
         }
     }
 )
-def delete_author(
-    author_id: int, 
-    service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor: 
+def delete_author(author_id: int, service: ServiceAuthor = Depends(get_service), current_user=Depends(JWTHelper.get_current_user)) -> SchemaAuthor: 
     try:
         return service.delete(author_id)
     except ExceptionNotFound as e: 
