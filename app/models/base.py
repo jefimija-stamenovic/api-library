@@ -1,3 +1,3 @@
-from app.models.user import User
-from app.models.author import Author
-from app.models.book import Book
+from models.user import User
+from models.author import Author
+from models.book import Book

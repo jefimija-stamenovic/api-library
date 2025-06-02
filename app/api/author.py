@@ -1,14 +1,11 @@
-from fastapi import APIRouter, Depends, Path, status, HTTPException, Query, Body
+from fastapi import APIRouter, Depends, status, HTTPException, Query, Body
 from typing import List, Optional
-from app.schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
-from app.services.author import ServiceAuthor, get_service
-from app.core.classes import *
-from app.api.examples.author import *
+from schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
+from services.author import ServiceAuthor, get_service
+from core.classes import *
+from api.examples.author import *
 
-router: APIRouter = APIRouter(
-    prefix = "/authors", 
-    tags = ["Authors"]
-)
+router: APIRouter = APIRouter(prefix="/authors", tags=["Authors"])
 
 @router.post(path = "/", name = "Create new author", summary="Create a new author", 
         description="""This endpoint creates a new author. In body, you have to send data object which  

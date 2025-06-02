@@ -1,18 +1,15 @@
-from app.models.book import Book
-from app.schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
-from app.models.author import Author
-from app.repositories.author import RepositoryAuthor
-from app.services.book import ServiceBook
-
 from typing import Any, List, Optional, Dict
-from app.core.classes import *
+from core.classes import *
+
+from models.author import Author
+from repositories.author import RepositoryAuthor
+
+from schemas.author import *
 
 class ServiceAuthor: 
     _repository : RepositoryAuthor
-    _service_book : ServiceBook
     def __init__(self) -> None:
         self._repository = RepositoryAuthor() 
-        self._service_book = ServiceBook()
 
     def find_by_id(self, author_id: int) -> SchemaAuthor: 
         founded_author: Author = self._repository.find_by_id(author_id)

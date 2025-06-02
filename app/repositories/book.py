@@ -3,9 +3,9 @@ from typing import Optional, List
 from sqlalchemy import or_, func
 from sqlalchemy.sql import expression
 from sqlalchemy.orm import Session, Query
-from app.models.book import Book
-from app.models.author import Author
-from app.core.db import Database
+from models.book import Book
+from models.author import Author
+from core.db import Database
 
 class RepositoryBook:
     _session : Session 

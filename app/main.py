@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
-from app.api.auth import router as router_user
-from app.api.author import router as router_author 
-from app.api.book import router as router_book
-from app.api.base import router
-from app.core.db import Database
+
+from core.config import settings
+from core.db import Database
+
+from api.auth import router as router_user
+from api.author import router as router_author 
+from api.book import router as router_book
+from api.base import router
+
 
 import uvicorn
 

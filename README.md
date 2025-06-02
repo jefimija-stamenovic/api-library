@@ -233,12 +233,12 @@ U folderu env se nalaze dva fajla prod.env i test.env sa promenljivama koje su p
 U zavisnosti od toga koje okruženje je potrebno, prilikom pokretanja programa se dodaje određeni parametar. Ako je potrebno testno okruženje, onda se pokreće sledećom komandom: 
 
 ```bash
-  python -m app.main --test
+    python app/main.py --test
 ```
 Ako je, pak, potrebno produkciono okruženje, onda se dodaje argument --prod
 
 ```bash
-  python -m app.main --prod
+   python app/main.py --prod
 ```
 
 ## 📄 Dokumentacija API-ja: Swagger i ReDoc 
@@ -306,7 +306,7 @@ Primer SQLAlchemy modela **Book**:
 
 
 > [!IMPORTANT]
-> Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika – u fajlu **alembic.ini** je dodat sledeći kod:
+> Zbog automatskog praćenja svih SQLAlchemy modela koji se koriste u projektu, primenjena je sledeća logika – u fajlu **alembic\env.py** je dodat sledeći kod:
 >
 > ```python
 > from app.core.db import Base
@@ -317,12 +317,12 @@ Primer SQLAlchemy modela **Book**:
 > dok se u **app/models/base.py** navode svi modeli koji se koriste u aplikaciji:
 >
 > ```python
-> from app.models.user import User
-> from app.models.author import Author
-> from app.models.book import Book
+> from models.user import User
+> from models.author import Author
+> from models.book import Book
 > ```
 >
-> Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl **alembic.ini**.
+> Ovakvim pristupom je obezbeđeno da svi modeli budu registrovani na jednom mestu bez potrebe da se dodatno menja fajl ***alembic\env.py**.
 
 ## Pydantic šeme
 U FastAPI-u se često koriste Pydantic šeme koje se koriste za validiranje i strukturisanje ulaznih i izlaznih podataka. Tehnički, one se ponašaju kao DTO-vi (Data Transfer Objects) tj. kao objekti za prenos podataka na relaciji klijent-aplikacija ili različitih slojeva aplikacije. 
@@ -381,15 +381,6 @@ Kao što je već rečeno, ovaj sloj je posrednik između baze podataka i poslovn
 
 U nastavku je dat primer klase **RepositoryBook** koja sadrži metode za rad sa entitom **Book**. 
 ```python 
-from datetime import date
-from typing import Optional, List
-from sqlalchemy import or_, func
-from sqlalchemy.sql import expression
-from sqlalchemy.orm import Session, Query
-from app.models.book import Book
-from app.models.author import Author
-from app.core.db import Database
-
 class RepositoryBook:
     _session : Session 
     def __init__(self) -> None:
@@ -461,12 +452,6 @@ Servisi obezbeđuju da kontroleri ne brinu o detaljima baze, dok se repozitoriju
 Dat je primer servisa **ServiceBook** u kom je implementirana logika upravljanja knjigama: 
 
 ```python 
-from app.core.classes import *
-from app.repositories.book import RepositoryBook
-from app.schemas.book import *
-from app.models.book import Book
-from typing import Any, List, Optional, Dict
-
 class ServiceBook: 
     _repository : RepositoryBook
     def __init__(self) -> None:
@@ -511,13 +496,6 @@ Zadaci rutera su:
 Naredna sekcija koda prikazuje implementaciju kontrolera za upravljanje knjigama: 
 
 ```python
-from fastapi import APIRouter, Depends, Path, status, HTTPException, Query, Body
-from typing import List, Optional
-from app.schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
-from app.services.author import ServiceAuthor, get_service
-from app.core.classes import *
-from app.api.examples.author import *
-
 router: APIRouter = APIRouter(
     prefix = "/authors", 
     tags = ["Authors"]

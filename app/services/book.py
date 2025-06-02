@@ -1,7 +1,7 @@
-from app.core.classes import *
-from app.repositories.book import RepositoryBook
-from app.schemas.book import *
-from app.models.book import Book
+from core.classes import *
+from repositories.book import RepositoryBook
+from schemas.book import *
+from models.book import Book
 from typing import Any, List, Optional, Dict
 
 class ServiceBook: 

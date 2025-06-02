@@ -1,8 +1,8 @@
 from typing import Optional, List
 from sqlalchemy import or_, func
 from sqlalchemy.orm import Session, Query
-from app.models.author import Author
-from app.core.db import Database
+from models.author import Author
+from core.db import Database
 
 class RepositoryAuthor:
     _session: Session

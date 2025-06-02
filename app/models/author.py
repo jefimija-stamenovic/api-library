@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text
 from sqlalchemy.orm import relationship
-from app.core.db import Base 
+from core.db import Base 
 
 class Author(Base) :
     __tablename__: str = "authors"

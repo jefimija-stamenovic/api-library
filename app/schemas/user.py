@@ -2,12 +2,18 @@ from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Any
 import re
 
-class SchemaUserRegister(BaseModel):
-    first_name: str = Field(..., min_length=2, max_length=50, description="First name of user")
-    last_name: str = Field(..., min_length=2, max_length=50, description="Last name of user")
-    email : EmailStr = Field(..., description="Email of user")
-    username: str = Field(..., min_length=4, max_length=20, description="Username")
-    password: str = Field(..., min_length=8, description="Password")
+class Token(BaseModel): 
+    access_token: str = Field()
+    refresh_token: str = Field()
+
+class SchemaCredentials(BaseModel): 
+    username: str = Field(min_length=4, max_length=20, description="Username")
+    password: str = Field(min_length=8, description="Password")
+
+class SchemaUserRegister(SchemaCredentials):
+    first_name: str = Field(min_length=2, max_length=50, description="First name of user")
+    last_name: str = Field(min_length=2, max_length=50, description="Last name of user")
+    email : EmailStr = Field(description="Email of user")
     is_admin: bool = Field(False, description="Is user administrator?")
 
     @field_validator("first_name", "last_name")

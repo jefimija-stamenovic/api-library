@@ -1,14 +1,11 @@
 from fastapi import APIRouter, Depends, Path, Query, status, HTTPException, Body
 from typing import List, Optional
-from app.schemas.book import *
-from app.services.book import ServiceBook, get_service
-from app.core.classes import *
-from app.api.examples.book import *
+from schemas.book import *
+from services.book import ServiceBook, get_service
+from core.classes import *
+from api.examples.book import *
 
-router: APIRouter = APIRouter(
-    prefix="/books",
-    tags=["Books"]
-)
+router: APIRouter = APIRouter(prefix="/books",tags=["Books"])
 
 @router.post("/", name="Create book", summary="Create a new book",
     response_model=SchemaBook, response_description="Created book data", status_code=status.HTTP_201_CREATED,

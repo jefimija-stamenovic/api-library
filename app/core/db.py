@@ -1,12 +1,14 @@
-from app.core.config import Settings
+import os
+from typing import Optional
+
 from sqlalchemy import create_engine, text, Engine
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base, Session, sessionmaker
 
 from alembic.config import Config
 from alembic import command
-import os
-from typing import Optional
+
+from core.config import Settings
 
 Base = declarative_base()
 

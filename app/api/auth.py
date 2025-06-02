@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from app.schemas.user import SchemaUserRegister
-from app.services.user import ServiceUser, get_service
+from fastapi import APIRouter, Depends, HTTPException, status
+from schemas.user import SchemaUserRegister
+from services.user import ServiceUser, get_service
 router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
 
 @router.post(
@@ -34,7 +34,7 @@ router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
             "content": {
                 "application/json": {
                     "example": {
-                        "detail": "Username or email already in use."
+                        "detail": "User with username or email already exists"
                     }
                 }
             }
@@ -67,10 +67,9 @@ router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
         }
     }
 )
-def register_user(new_user: SchemaUserRegister, 
-                  service: ServiceUser = Depends(get_service)) -> SchemaUserRegister: 
+def register_user(new_user: SchemaUserRegister, service: ServiceUser = Depends(get_service)) -> SchemaUserRegister: 
     try: 
-        return service.register_user(new_user)
+        return service.register(new_user)
     except Exception as e: 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

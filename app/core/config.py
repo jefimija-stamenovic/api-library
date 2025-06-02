@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 import os, sys
-from app.core.constants import *
+from core.constants import *
 
 class Settings(BaseSettings):
     DB_DRIVER: str
@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_TOKEN_EXPIRE_DAYS: int
 
     class Config: 
         env_file: str = ".env"
@@ -37,5 +38,5 @@ settings = Settings(DB_DRIVER=os.environ.get("DB_DRIVER", cDB_DRIVER.value),
                     DB_PASSWORD = os.environ.get("DB_PASSWORD", cDB_PASSWORD.value), 
                     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", cJWT_SECRET_KEY.value), 
                     ALGORITHM = os.environ.get("ALGORITHM", cALGORITHM.value), 
-                    ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 
-                                                                     cACCESS_TOKEN_EXPIRE_MINUTES.value)))
+                    ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", cACCESS_TOKEN_EXPIRE_MINUTES.value)), 
+                    REFRESH_TOKEN_EXPIRE_DAYS = int(os.environ.get("REFRESH_TOKEN_EXPIRE_DAYS", cREFRESH_TOKEN_EXPIRE_DAYS.value)))
