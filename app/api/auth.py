@@ -1,18 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from schemas.user import SchemaUserRegister
+from schemas.user import *
 from services.user import ServiceUser, get_service
+from core.classes import *
 router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
 
-@router.post(
-    path = "/register", 
-    name="Registration", 
-    summary="Register a new user", 
+@router.post(path = "/register", name="Registration", summary="Register a new user", 
     description="""This endpoint registers a new user. In body, you have to send user data which 
                 contains first name, last name, email, username, password and flag for admin.
                 Username and email must be unique and password must pass the some checks. """,
-    response_description="This endpoint returns the created user", 
-    response_model=SchemaUserRegister, 
-    status_code=status.HTTP_201_CREATED, 
+    response_description="This endpoint returns the created user", response_model=SchemaUser, status_code=status.HTTP_201_CREATED, 
     responses={
         status.HTTP_201_CREATED: {
             "description" : "User is successfully registered", 
@@ -67,11 +63,74 @@ router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
         }
     }
 )
-def register_user(new_user: SchemaUserRegister, service: ServiceUser = Depends(get_service)) -> SchemaUserRegister: 
+def register_user(new_user: SchemaUserRegister, service: ServiceUser = Depends(get_service)) -> SchemaUser: 
     try: 
-        return service.register(new_user)
+        user: SchemaUser = service.register(new_user)
+        print(user)
+        return user
+    except ExceptionConflict as e: 
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail = str(e))
     except Exception as e: 
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal Server Error. Please try again later."
-        )
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+@router.post(path="/login", name="Login", summary="Login with credentials (username and password)",
+    description="""This endpoint authenticates an existing user. You need to provide valid credentials of user - username and password.
+            If authentication succeeds, it returns access and refresh tokens.""",
+    response_description="Access and refresh tokens", response_model=SchemaToken, status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Login successful.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                }
+            }
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Invalid username or password.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "description": "Validation error in the submitted credentials.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": [
+                            {
+                                "loc": ["body", "username"],
+                                "msg": "field required",
+                                "type": "value_error.missing"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "description": "An unexpected error occurred on the server.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Internal Server Error. Please try again later."
+                    }
+                }
+            }
+        }
+    }
+)
+def login_user(credentials: SchemaCredentials, service: ServiceUser = Depends(get_service)) -> SchemaToken:
+    try:
+        return service.login(credentials)
+    except ExceptionNotAuthorized as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password.")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

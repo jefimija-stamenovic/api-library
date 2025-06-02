@@ -9,10 +9,10 @@ class RepositoryUser:
         self._session = Database.get_session()
 
     def create(self, new_user: User) -> User:
-            self._session.add(new_user)
-            self._session.commit()
-            self._session.refresh(new_user)
-            return new_user
+        self._session.add(new_user)
+        self._session.commit()
+        self._session.refresh(new_user)
+        return new_user
 
     def find_by_id(self, user_id: int) -> Optional[User]:
         return self._session.query(User).filter(User.id == user_id).first()

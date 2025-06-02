@@ -1,8 +1,8 @@
-from pydantic import BaseModel, EmailStr, field_validator, Field
+from pydantic import BaseModel, EmailStr, field_validator, Field, ConfigDict
 from typing import Any
 import re
 
-class Token(BaseModel): 
+class SchemaToken(BaseModel): 
     access_token: str = Field()
     refresh_token: str = Field()
 
@@ -11,6 +11,8 @@ class SchemaCredentials(BaseModel):
     password: str = Field(min_length=8, description="Password")
 
 class SchemaUserRegister(SchemaCredentials):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     first_name: str = Field(min_length=2, max_length=50, description="First name of user")
     last_name: str = Field(min_length=2, max_length=50, description="Last name of user")
     email : EmailStr = Field(description="Email of user")
@@ -25,7 +27,7 @@ class SchemaUserRegister(SchemaCredentials):
     
     @field_validator("username")
     def validate_username(cls, value: str)-> str:
-        if not re.match(r'^[a-zA-Z0-9_]+$', value):
+        if not re.match(r'^[a-zA-Z0-9_\.]+$', value):
             raise ValueError("Username can only contain letters, digits, and underscores.")
         return value
     
@@ -35,3 +37,6 @@ class SchemaUserRegister(SchemaCredentials):
         if not re.match(pattern, value):
             raise ValueError("Password must be at least 8 characters long, and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")
         return value
+    
+class SchemaUser(SchemaUserRegister): 
+    id: int = Field(gt=0)
