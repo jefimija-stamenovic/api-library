@@ -11,10 +11,13 @@ from api.base import router
 
 from fastapi.openapi.utils import get_openapi
 import uvicorn
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-    openapi_schema = get_openapi(
+
+def create_app() -> FastAPI: 
+    if not getattr(Database, "_engine", None):
+        print("LOG ** => 🔧 Database is not initialized, Initialization is next...")
+        Database.init(settings)
+
+    app = FastAPI(
         title="Library API",
         description="Welcome to the **Library API** - a RESTful backend server built with **FastAPI**",
         summary="Backend API for managing books, users and authors in a digital library.", 
@@ -28,30 +31,11 @@ def custom_openapi():
             "name" : "Apache 2.0", 
             "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
         }, 
-        routes=app.routes,
-    )
-    openapi_schema["components"]["securitySchemes"] = {
-        "bearerAuth": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT",
-        }
-    }
-    
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
-def create_app() -> FastAPI: 
-    if not getattr(Database, "_engine", None):
-        print("LOG ** => 🔧 Database is not initialized, Initialization is next...")
-        Database.init(settings)
-
-    app = FastAPI(
         docs_url="/docs/swagger", 
         redoc_url="/docs/redoc", 
         openapi_url="/openapi.json"
     )
-    app.openapi = custom_openapi
+
     app.add_middleware(CORSMiddleware, 
                         allow_origins=["*"], 
                         allow_credentials=True,

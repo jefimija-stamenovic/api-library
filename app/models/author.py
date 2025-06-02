@@ -10,4 +10,4 @@ class Author(Base) :
     last_name = Column(String(50), nullable=False, index=True)
     biography = Column(Text, nullable=True)
 
-    books = relationship("Book", back_populates="author")
+    books = relationship("Book", back_populates="author", cascade="all, delete-orphan")

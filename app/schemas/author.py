@@ -1,6 +1,6 @@
-from typing import Optional, List
 from pydantic import BaseModel, field_validator, Field, ConfigDict
-from schemas.book import SchemaBook
+from app.schemas.book import SchemaBook
+from typing import Optional, List
 import re
 
 class SchemaAuthorBase(BaseModel):

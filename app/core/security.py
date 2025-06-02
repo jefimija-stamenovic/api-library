@@ -21,7 +21,7 @@ class PasswordHasher:
       return cls._pwd_context.verify(password, hashed_password)
    
 class JWTHelper: 
-   oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+   oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
    @classmethod
    def create_access_token(cls, data: Dict[str, Any]) -> str:
       expire: datetime = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)

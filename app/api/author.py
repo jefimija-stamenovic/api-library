@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException, Query, Body
-from typing import List, Optional
+from typing import Sequence, Optional
 from schemas.author import SchemaAuthorBase, SchemaAuthor, SchemaAuthorUpdate
 from services.author import ServiceAuthor, get_service
 from core.classes import *
@@ -68,11 +68,11 @@ router: APIRouter = APIRouter(prefix="/authors", tags=["Authors"])
         }
     }
 )
-def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_create), 
+async def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_create), 
                   service: ServiceAuthor = Depends(get_service), 
                   current_user=Depends(JWTHelper.get_current_user)) -> SchemaAuthor:
     try:
-        return service.create(new_author)
+        return await service.create(new_author)
     except ExceptionConflict as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Author with this name already exists.")
     except Exception as e:
@@ -135,9 +135,9 @@ def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=example_c
         }
     }
 )
-def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
+async def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service)) -> SchemaAuthor:
     try:
-        return service.find_by_id(author_id)
+        return await service.find_by_id(author_id)
     except ExceptionNotFound as e: 
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -203,12 +203,12 @@ def get_author_by_id(author_id:int, service: ServiceAuthor = Depends(get_service
         }
     }
 )
-def update_author(author_id: int,
+async def update_author(author_id: int,
                 updated_data: SchemaAuthorUpdate = Body(openapi_examples=example_update), 
                 service: ServiceAuthor = Depends(get_service), 
                 current_user=Depends(JWTHelper.get_current_user)) -> SchemaAuthor:
     try:
-        return service.update(author_id, updated_data)
+        return await service.update(author_id, updated_data)
     except ExceptionNotFound as e: 
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -258,9 +258,9 @@ def update_author(author_id: int,
         }
     }
 )
-def delete_author(author_id: int, service: ServiceAuthor = Depends(get_service), current_user=Depends(JWTHelper.get_current_user)) -> SchemaAuthor: 
+async def delete_author(author_id: int, service: ServiceAuthor = Depends(get_service), current_user=Depends(JWTHelper.get_current_user)) -> SchemaAuthor: 
     try:
-        return service.delete(author_id)
+        return await service.delete(author_id)
     except ExceptionNotFound as e: 
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -279,7 +279,7 @@ def delete_author(author_id: int, service: ServiceAuthor = Depends(get_service),
         "Query param search is optional which means if is not provided, all authors will be returned. "
         "Search filter include: first name, last name, and partial match on biography."
     ),
-    response_model=List[SchemaAuthor], response_description="List of authors matching the filters.", status_code=status.HTTP_200_OK,
+    response_model=Sequence[SchemaAuthor], response_description="List of authors matching the filters.", status_code=status.HTTP_200_OK,
     responses={
         status.HTTP_200_OK: {
             "description": "Authors retrieved successfully.",
@@ -306,11 +306,11 @@ def delete_author(author_id: int, service: ServiceAuthor = Depends(get_service),
         }
     }
 )
-def search_authors(
+async def search_authors(
     search: Optional[str] = Query(None, description="Filter by author's first name or last name or biography"),
-    service: ServiceAuthor = Depends(get_service)) -> List[SchemaAuthor]:
+    service: ServiceAuthor = Depends(get_service)) -> Sequence[SchemaAuthor]:
     try:
-        return service.search(search)
+        return await service.search(search)
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

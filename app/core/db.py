@@ -4,6 +4,7 @@ from typing import Optional
 from sqlalchemy import create_engine, text, Engine
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base, Session, sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker, AsyncEngine
 
 from alembic.config import Config
 from alembic import command
@@ -17,9 +18,12 @@ class Database:
     _db_url: Optional[URL] = None
     _sessionmaker: Optional[sessionmaker] = None
 
+    _async_engine: Optional[AsyncEngine] = None 
+    _async_sessionmaker : Optional[async_sessionmaker] = None 
+
     @classmethod
     def init(cls, settings: Settings) -> None:
-        tmp_db_url = URL.create(
+        tmp_db_url: URL = URL.create(
             drivername=settings.DB_DRIVER,
             host=settings.DB_HOST,
             port=settings.DB_PORT,
@@ -45,7 +49,13 @@ class Database:
             database=settings.DB_NAME
         )
         cls._engine = create_engine(cls._db_url)
+
+        async_url: str = f"mysql+aiomysql://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+        cls._async_engine = create_async_engine(async_url)
+
         cls._sessionmaker = sessionmaker(bind=cls._engine, autocommit=False, autoflush=False)
+        cls._async_sessionmaker = async_sessionmaker(bind=cls._async_engine, autoflush=False, autocommit=False)
+
         print("LOG ** => 🔧 Engine & sessionmaker are initialized!")
         cls.__auto_migrate()
 
@@ -60,6 +70,12 @@ class Database:
         if cls._sessionmaker is None:
             raise RuntimeError("Sessionmaker is not initialized. Call Database.init(settings) first.")
         return cls._sessionmaker()
+    
+    @classmethod
+    def get_session_async(cls) -> AsyncSession: 
+        if cls._async_sessionmaker is None:
+            raise RuntimeError("Async Sessionmaker is not initialized. Call Database.init(settings) first.")
+        return cls._async_sessionmaker()
 
     @classmethod
     def __auto_migrate(cls) -> None:

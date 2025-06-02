@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from schemas.user import *
 from services.user import ServiceUser, get_service
 from core.classes import *
-router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
+from fastapi.security import OAuth2PasswordRequestForm
 
+router: APIRouter = APIRouter(prefix="/auth", tags=["Users"])
 @router.post(path = "/register", name="Registration", summary="Register a new user", 
     description="""This endpoint registers a new user. In body, you have to send user data which 
                 contains first name, last name, email, username, password and flag for admin.
@@ -125,10 +126,11 @@ def register_user(new_user: SchemaUserRegister, service: ServiceUser = Depends(g
         }
     }
 )
-def login_user(credentials: SchemaCredentials, service: ServiceUser = Depends(get_service)) -> SchemaToken:
+def login_user(form_data: OAuth2PasswordRequestForm = Depends(), service: ServiceUser = Depends(get_service)) -> SchemaToken:
+    credentials = SchemaCredentials(username=form_data.username, password=form_data.password)
     try:
         return service.login(credentials)
-    except ExceptionNotAuthorized as e:
+    except ExceptionNotAuthorized:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password.")
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
