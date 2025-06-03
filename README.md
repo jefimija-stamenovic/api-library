@@ -254,10 +254,23 @@ Konfiguracija oba web interfejsa dokumentacije, tačnije definisanje njihovih ru
 
 ```python
 app = FastAPI(
-    docs_url="/docs/swagger", 
-    redoc_url="/docs/redoc", 
-    openapi_url="/openapi.json"
-)
+        title="Library API",
+        description="Welcome to the **Library API** - a RESTful backend server built with **FastAPI**",
+        summary="Backend API for managing books, users and authors in a digital library.", 
+        version="1.0.0",
+        contact={
+            "name" : "Jefimija Stamenovic", 
+            "url" : "https://github.com/jefimija-stamenovic", 
+            "email" : "jefimija.stamenovic@gmail.com"
+        },
+        license_info={
+            "name" : "Apache 2.0", 
+            "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
+        }, 
+        docs_url="/docs/swagger", # definisanje putanje za Swagger
+        redoc_url="/docs/redoc", # definisanje putanje za ReDoc
+        openapi_url="/openapi.json"
+    )
 ```
 ## 📊SQLALchemy modeli
 U okviru foldera `app/models` se nalaze svi SQLAlchemy modeli potrebni za rad aplikacije. 
