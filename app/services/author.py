@@ -21,8 +21,8 @@ class ServiceAuthor:
         founded_author: Author = await self._repository.find_by_name(first_name=new_author.first_name, last_name=new_author.last_name)
         if founded_author:
             raise ExceptionConflict()
-        model_author : Author = Author(**new_author.model_dump())
-        return SchemaAuthor.model_validate(self._repository.create(model_author))
+        model_author : Author = await self._repository.create(Author(**new_author.model_dump()))
+        return SchemaAuthor.model_validate(model_author)  
     
     async def delete(self, author_id: int) -> SchemaAuthor: 
         founded_author: Optional[SchemaAuthor] = await self.find_by_id(author_id)

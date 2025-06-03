@@ -72,7 +72,7 @@ async def create_author(new_author: SchemaAuthorBase = Body(openapi_examples=exa
                   service: ServiceAuthor = Depends(get_service), 
                   current_user=Depends(JWTHelper.get_current_user)) -> SchemaAuthor:
     try:
-        return await service.create(new_author)
+        return await service.create(new_author) 
     except ExceptionConflict as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Author with this name already exists.")
     except Exception as e:

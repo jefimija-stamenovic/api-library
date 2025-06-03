@@ -17,6 +17,15 @@ example_create: Dict[str, Example] = {
             "first_name": "Desanka",
             "last_name": "Maksimović"
         }
+    }, 
+    "Example 3 - Invalid First Name": {
+        "summary" : "Invalid value for author's first name", 
+        "description" : "The value of first name is not matched with requested regular expression", 
+        "value" : {
+            "first_name": "Ivo111",
+            "last_name": "Andrić",
+            "biography": "Dobitnik Nobelove nagrade"
+        }
     }
 }
 

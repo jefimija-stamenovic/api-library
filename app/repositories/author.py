@@ -16,7 +16,14 @@ class RepositoryAuthor:
         self._session.add(new_author)
         await self._session.commit()
         await self._session.refresh(new_author)
-        return new_author
+
+        result = await self._session.execute(
+            select(Author)
+            .options(selectinload(Author.books))
+            .where(Author.id == new_author.id)
+        )
+        author_with_books = result.scalar_one()
+        return author_with_books
 
     async def find_by_id(self, author_id: int) -> Optional[Author]:
         stmt = (
