@@ -23,7 +23,7 @@ class Settings(BaseSettings):
         case_sensitive: bool = True
 
 
-ENV_PATH: str = os.path.join(os.path.dirname(__file__), '..', '..', 'env')
+ENV_PATH: str = os.path.join(os.path.dirname(__file__), '..', 'env')
 
 ENV_PATH = os.path.join(ENV_PATH, 'prod.env') if "--prod" in sys.argv else os.path.join(ENV_PATH, 'test.env')
 print(ENV_PATH)
