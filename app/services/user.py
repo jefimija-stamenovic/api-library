@@ -7,10 +7,8 @@ from repositories.user import RepositoryUser, get_repository
 from models.user import User
 
 class ServiceUser: 
-    _repository : RepositoryUser
-
     def __init__(self, repository: RepositoryUser) -> None: 
-        self._repository = repository
+        self._repository: RepositoryUser = repository
 
     def find_by_username(self, username: str) -> SchemaUser: 
         founded_user: User = self._repository.find_by_username(username)

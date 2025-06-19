@@ -4,9 +4,9 @@ from core.db import Database
 from models.user import User
 
 class RepositoryUser: 
-    _session : Session 
+
     def __init__(self) -> None:
-        self._session = Database.get_session()
+        self._session: Session = Database.get_session()
 
     def create(self, new_user: User) -> User:
         self._session.add(new_user)

@@ -7,9 +7,8 @@ from repositories.author import RepositoryAuthor
 from schemas.author import *
 
 class ServiceAuthor: 
-    _repository : RepositoryAuthor
     def __init__(self) -> None:
-        self._repository = RepositoryAuthor() 
+        self._repository : RepositoryAuthor = RepositoryAuthor() 
 
     async def find_by_id(self, author_id: int) -> SchemaAuthor: 
         founded_author: Author = await self._repository.find_by_id(author_id)

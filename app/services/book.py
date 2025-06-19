@@ -5,9 +5,8 @@ from models.book import Book
 from typing import Any, List, Optional, Dict
 
 class ServiceBook: 
-    _repository : RepositoryBook
     def __init__(self) -> None:
-        self._repository = RepositoryBook() 
+        self._repository: RepositoryBook = RepositoryBook() 
 
     def find_by_id(self, book_id: int) -> SchemaBook: 
         founded_book: Book = self._repository.find_by_id(book_id)

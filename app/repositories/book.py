@@ -8,9 +8,9 @@ from models.author import Author
 from core.db import Database
 
 class RepositoryBook:
-    _session : Session 
+    
     def __init__(self) -> None:
-        self._session = Database.get_session()
+        self._session: Session = Database.get_session()
 
     def create(self, new_book: Book) -> Book:
             self._session.add(new_book)

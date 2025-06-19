@@ -7,10 +7,9 @@ from core.db import Database
 
 
 class RepositoryAuthor:
-    _session: AsyncSession
 
     def __init__(self) -> None:
-        self._session = Database.get_session_async()
+        self._session : AsyncSession = Database.get_session_async()
 
     async def create(self, new_author: Author) -> Author:
         self._session.add(new_author)
